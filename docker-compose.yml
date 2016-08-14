@@ -1,0 +1,13 @@
+version: '2'
+services:
+  starbook-backend:
+    build: starbook-backend
+    ports:
+     - "5000:5000"
+    env_file:
+     - starbook-backend/starbook-backend-vars.env
+    image: starbook-backend
+    links:
+     - elasticsearch
+  elasticsearch:
+    image: elasticsearch:2.3
