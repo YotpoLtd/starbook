@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://code.angularjs.org/1.5.0/angular.min.js"></script>
+    <script src="https://code.angularjs.org/1.5.0/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+
+    <meta charset="utf-8">
+
+    <title>StarBook</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: 'Open Sans';
+        }
+
+        .node {
+            cursor: pointer;
+        }
+
+        .node text {
+            font: 12px 'Open Sans';
+        }
+
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2px;
+        }
+
+        .side-bar {
+            width: 385px;
+            height: 100%;
+            right: 6px;
+            position: absolute;
+            border-left: 1px solid lightgray;
+            z-index: 99999;
+            background-color: #fff;
+            -webkit-box-shadow: 0 0 40px rgba(72,72,72,.05);
+            -moz-box-shadow: 0 0 40px rgba(72,72,72,.05);
+            box-shadow: 0 0 40px rgba(72,72,72,.05);
+            border: solid 1px rgba(218,218,218,.58);
+            transition: right 0.7s linear;
+        }
+
+        svg {
+            position: absolute;
+            top: 230px;
+            left: 84px;
+        }
+
+        #breadcrumbs {
+            position: absolute;
+            top: 15px;
+            left: 92px;
+        }
+
+        #breadcrumbs a {
+            position: relative;
+            display: inline-block;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            padding-right: 0px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #b6d7ff;
+        }
+        #breadcrumbs a img {
+            margin-right: 6px;
+        }
+
+        .back-arrow {
+            position: absolute;
+            left: 422px;
+            top: 114px;
+            cursor: pointer;
+            text-decoration: none;
+            background-image: url('images/arrow.png');
+            width: 33px;
+            height: 33px;
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        .user-table {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            background-color: white;
+        }
+
+        .user-details-wrapper{
+
+        }
+
+        .user-title {
+            position: relative;
+            top: -64px;
+            left: 119px;
+            color: #2895F1;
+            max-width: 210px;
+        }
+
+        .skills {
+            padding-bottom: 11px;
+        }
+
+        .user-skills {
+            padding-bottom: 5px;
+            margin-right: 5px;
+        }
+
+        .user-skill {
+            border: 1px solid #3bb3f1;
+            border-radius: 18px;
+            padding: 4px 9px 4px 11px;
+            margin-right: 5px;
+        }
+
+        .user-hobbies {
+            padding-bottom: 5px;
+        }
+
+        .table-row {
+            cursor: pointer;
+        }
+
+        .navbar {
+            background-color: #2f84ed;
+            width: 100%;
+            height: 70px;
+        }
+
+        .search-bar {
+            width: 356px;
+            padding-left: 16px;
+            height: 38px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            border: none;
+            background-color: #fff;
+        }
+
+        .seperator {
+            border: #efefef 1px solid;
+        }
+
+        .yo-logo {
+            width: 40px;
+            margin-top: 13px;
+            margin-left: 10px;
+        }
+
+        .user-details-wrapper {
+            margin: 25px;
+            font-family: "Open Sans";
+            font-size: 15px;
+            font-weight: bold; color: #56575f;
+        }
+
+        .user-email {
+            position: relative;
+            top: 26px;
+            left: 46px;
+        }
+
+        .user-phone {
+            position: relative;
+            top: 26px;
+            left: 46px;
+        }
+
+        .home {
+            width: 24px;
+            margin-bottom: 7px;
+            margin-left: 10px;
+        }
+
+        .user-name {
+            position: relative;
+            left: 120px;
+            top: -72px;
+        }
+
+        .user-slack {
+            position: relative;
+            top: 26px;
+            left: 46px;
+            text-decoration: none;
+        }
+
+        .open-side-bar {
+            position: absolute;
+            left: -55px;
+            top: 21px;
+            cursor: pointer;
+        }
+
+        .sider {
+            position: absolute;
+            right: -386px;
+        }
+
+        .loader {
+            position: absolute;
+            top: 271px;
+            left: 353px;
+        }
+
+    </style>
+
+</head>
+
+<body background="images/BG_img.png" ng-controller="mainCtrl">
+<div class="navbar">
+    <img src="images/Yotpo-Logo.png" class="yo-logo"/>
+    <img src="images/home.png" class="home" onclick="globalVar.resetRoot()" style="cursor: pointer"/>
+    <div id="breadcrumbs">
+    </div>
+</div>
+
+<img src="images/ring.svg" class="loader" style="">
+<a href="#" onclick="globalVar.prevArrow()" class="back-arrow hide"></a>
+
+<div class="side-bar">
+    <img src="images/open.png" class="open-side-bar" onclick="toggleSideBar()"/>
+    <div ng-controller="myCtrl">
+
+        <div style="position: absolute;right: 9px;top: -57px;">
+            <input type="text" ng-model="search" ng-model-options="{ debounce: 1000 }" placeholder="Search" class="search-bar" ng-change="textChanged()" ng-blur="onLeaveSearch()"/>
+        </div>
+
+        <div class="user-details-wrapper">
+            <div></div>
+            <img class="user-image" src="images/1.png" width="90">
+            <div class="user-name">Star Book</div>
+            <div class="user-title">Magician</div>
+            <hr class="seperator"/>
+            <div class="user-email">starbook@yotpo.com</div>
+            <img src="images/email.png">
+            <div class="user-phone">1800-STARBOOK</div>
+            <img src="images/Phone_icon.png">
+            <a href="https://yotpo.slack.com/messages/" target="_blank">
+                <div class="user-slack">Open a slack chat</div>
+                <img src="images/slack.png">
+            </a>
+            <hr class="seperator"/>
+            <div class="skills">Professional Skills</div>
+            <div class="user-skills"><span class="user-skill">talking</span><span class="user-skill">gossiping</span><span class="user-skill">googeling</span></div>
+            <hr class="seperator"/>
+            <div class="skills">Personal Hobbies</div>
+            <div class="user-hobbies"><span class="user-skill">golf</span><span class="user-skill">soccer</span><span class="user-skill">basketball</span></div>
+        </div>
+
+        <table cellpadding="5" cellspacing="0" border="1" class="user-table" ng-show="showTable">
+            <tr ng-repeat="name in names">
+                <td class="table-row" ng-click="nameClicked(name)">{{name}}</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+
+<!-- load the d3.js library -->
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<script>
+    function toggleSideBar() {
+        var sideBar = document.getElementsByClassName("side-bar")[0];
+        if (sideBar.classList.contains('sider')) {
+            sideBar.classList.remove('sider');
+        } else {
+            sideBar.classList.add('sider');
+        }
+    }
+
+    function populateGraph(treeData) {
+
+        document.getElementsByClassName('loader')[0].classList.add('hide');
+
+        // ************** Generate the tree diagram  *****************
+        var margin = {top: 40, right: 120, bottom: 20, left: 120},
+                width = 960 - margin.right - margin.left,
+                height = 500 - margin.top - margin.bottom;
+
+        var i = 0, duration = 750, root, oldRoot;
+
+        var tree = d3.layout.tree().size([height, width]);
+
+        var diagonal = d3.svg.diagonal()
+                .projection(function (d) {
+                    return [d.x, d.y];
+                });
+
+        var svg = d3.select("body").append("svg")
+                .attr("width", width + margin.right + margin.left)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var imageIndex = 0;
+
+        function getImage(node) {
+            return node['image'] || ('images/' + (++imageIndex % 30 + 1) + '.png');
+        }
+
+        var node = treeData;
+        recSetImage(node, null);
+        function recSetImage(node, parent) {
+            if (node) {
+                node.image = getImage(node);
+                node.parentNode = parent;
+                var childs = node._children || node.children;
+                if (childs) {
+                    for (var i = 0; i < childs.length; i++) {
+                        recSetImage(childs[i], node)
+                    }
+                }
+            }
+        }
+
+        treeData.children = treeData._children;
+        treeData._children = null;
+
+        root = treeData;
+        root.x0 = height / 2;
+        root.y0 = 0;
+        root.image = 'images/yotpo.png';
+
+        oldRoot = root;
+
+        update(root);
+        updateSideBar(root);
+
+        d3.select(self.frameElement).style("height", "500px");
+
+        var backArrow = document.getElementsByClassName("back-arrow")[0];
+        backArrow.setAttribute("visibility", "visible");
+
+        function update(source) {
+
+            showHideArrow();
+
+            // Compute the new tree layout.
+            var nodes = tree.nodes(root).reverse(),
+                    links = tree.links(nodes);
+
+            // Normalize for fixed-depth.
+            nodes.forEach(function (d) {
+                d.y = d.depth * 180;
+            });
+
+            // Update the nodes…
+            var node = svg.selectAll("g.node")
+                    .data(nodes, function (d) {
+                        return d.id || (d.id = ++i);
+                    });
+
+            // Enter any new nodes at the parent's previous position.
+            var nodeEnter = node.enter().append("g")
+                    .attr("class", "node")
+                    .attr("transform", function (d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    })
+                    .on("click", click);
+
+            // Append images
+            nodeEnter.append("svg:image")
+                    .attr("xlink:href", function (d) {
+                        return d.image;
+                    })
+                    .attr("x", function (d) {
+                        return -25;
+                    })
+                    .attr("y", function (d) {
+                        return -25;
+                    })
+                    .attr("height", 80)
+                    .attr("width", 80);
+
+            nodeEnter.append("text")
+                    .attr("x", function (d) {
+                        return 0;
+                    })
+                    .attr("dy", "6.25em")
+                    .text(function (d) {
+                        var nameArr = d.name.split(' ');
+                        if (nameArr.length == 1) {
+                            return d.name;
+                        }
+                        return nameArr[0] + ' ' + nameArr[1][0] + '.';
+                    })
+                    .style("fill-opacity", 1e-6);
+
+//            nodeEnter.append("text")
+//                    .attr("x", "0")
+//                    .attr("dy", "9.25em")
+//                    .text(function (d) {
+//                        if (d._children)
+//                            return '' + d._children.length + ' children';
+//                        return '';
+//                    }).style("font-size", '8px');
+
+            // Transition nodes to their new position.
+            var nodeUpdate = node.transition()
+                    .duration(duration)
+                    .attr("transform", function (d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    });
+
+
+            nodeUpdate.select("text")
+                    .style("fill-opacity", 1);
+
+            // Transition exiting nodes to the parent's new position.
+            var nodeExit = node.exit().transition()
+                    .duration(duration)
+                    .attr("transform", function (d) {
+                        return "translate(" + source.x + "," + source.y + ")";
+                    })
+                    .remove();
+
+
+            nodeExit.select("text")
+                    .style("fill-opacity", 1e-6);
+
+            // Update the links…
+            var link = svg.selectAll("path.link")
+                    .data(links, function (d) {
+                        return d.target.id;
+                    });
+
+            // Enter any new links at the parent's previous position.
+            link.enter().insert("path", "g")
+                    .attr("class", "link")
+                    .attr("d", function (d) {
+                        var o = {x: source.x0, y: source.y0};
+                        return diagonal({source: o, target: o});
+                    });
+
+            // Transition links to their new position.
+            link.transition()
+                    .duration(duration)
+                    .attr("d", diagonal);
+
+            // Transition exiting nodes to the parent's new position.
+            link.exit().transition()
+                    .duration(duration)
+                    .attr("d", function (d) {
+                        var o = {x: source.x, y: source.y};
+                        return diagonal({source: o, target: o});
+                    })
+                    .remove();
+
+            // Stash the old positions for transition.
+            nodes.forEach(function (d) {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+        }
+
+        // Toggle children on click.
+        function click(d) {
+            if (root == d) {
+                return;
+            }
+            showChilds(d);
+            hideChildsOfChilds(d);
+            updateBreadcrumbs(d);
+            root = d;
+            update(d);
+            updateSideBar(d);
+        }
+
+
+        function createLinks(nodes) {
+            var bc = document.getElementById('breadcrumbs');
+            bc.innerHTML = '';
+            for (var i = 0; i < nodes.length; i++) {
+                appendLink(nodes[i], bc);
+            }
+        }
+
+        function appendLink(node, bc) {
+            var link = document.createElement('a');
+            link.href = "#";
+            link.className = node.name;
+            link.onclick = function () {
+                var childs = this.parentElement.children;
+                var childsToRemove = [];
+                var shouldRemove = false;
+                for (var i = 0; i < childs.length; i++) {
+                    if (childs[i] === this) {
+                        shouldRemove = true;
+                    } else {
+                        if (shouldRemove) {
+                            childsToRemove.push(childs[i]);
+                        }
+                    }
+                }
+                for (var i = 0; i < childsToRemove.length; i++) {
+                    this.parentElement.removeChild(childsToRemove[i]);
+                }
+
+                hideChildsOfChilds(node);
+                showChilds(node);
+                updateRoot(node);
+                updateSideBar(node);
+            };
+            var oImg = document.createElement("img");
+            oImg.setAttribute('src', 'images/BC_arrow.png');
+            link.appendChild(oImg);
+            var t = document.createTextNode(node.name);
+            link.appendChild(t);
+            bc.appendChild(link);
+        }
+
+        function updateRoot(node) {
+            root = node;
+            update(root);
+        }
+
+        function getFakePhone() {
+            return Math.random().toString().slice(2,11);
+        }
+
+        function updateSideBar(node) {
+            var userWrapper = document.getElementsByClassName("user-details-wrapper")[0];
+            userWrapper.setAttribute("display", "block");
+
+            var userImage = document.getElementsByClassName("user-image")[0];
+            userImage.src = node.image;
+
+            var userName = document.getElementsByClassName("user-name")[0];
+            userName.textContent = node.name;
+
+            var userTitle = document.getElementsByClassName("user-title")[0];
+            userTitle.textContent = node.title;
+
+            var userEmail = document.getElementsByClassName("user-email")[0];
+            userEmail.textContent = node.email;
+
+            var userPhone = document.getElementsByClassName("user-phone")[0];
+            userPhone.textContent = node.phone || getFakePhone();
+
+            var userSkills = document.getElementsByClassName("user-skills")[0];
+            userSkills.textContent = '';
+            for (var i = 0; node.expertise && i < node.expertise.length; i++) {
+                var span = document.createElement('span');
+                span.textContent = node.expertise[i];
+                span.className = "user-skill";
+                userSkills.appendChild(span);
+            }
+
+            var userHobbies = document.getElementsByClassName("user-hobbies")[0];
+            userHobbies.textContent = '';
+            for (var i = 0; node.hobbies && i < node.hobbies.length; i++) {
+                var span = document.createElement('span');
+                span.textContent = node.hobbies[i];
+                span.className = "user-skill";
+                userHobbies.appendChild(span);
+            }
+        }
+
+        function showHideArrow() {
+            var ba = document.getElementsByClassName('back-arrow')[0];
+            if (root == oldRoot) {
+                ba.classList.add('hide');
+            } else {
+                ba.classList.remove('hide');
+            }
+        }
+
+        function updateBreadcrumbs(node) {
+            var nodes = [];
+            node = node.parentNode;
+            while (node) {
+                if (node && node != null && node != 'null')
+                    nodes.push(node);
+                node = node.parentNode;
+            }
+            if (nodes[0])
+                createLinks(nodes.reverse());
+        }
+
+        function findNodeByName(name) {
+            function searchTree(d) {
+                if (d.children)
+                    d.children.forEach(searchTree);
+                else if (d._children)
+                    d._children.forEach(searchTree);
+                if (d.name == name) {
+                    currNode = d;
+                }
+            }
+
+            searchTree(oldRoot);
+        }
+
+        function hideChildsOfChilds(node) {
+            if (node.children) {
+                for (var i = 0; i < node.children.length; i++) {
+                    hideChilds(node.children[i]);
+                }
+            }
+        }
+
+        function hideChilds(node) {
+            if (node.children) {
+                node._children = node.children;
+                node.children = null;
+            }
+        }
+
+        function showChilds(node) {
+            if (node._children) {
+                node.children = node._children;
+                node._children = null;
+            }
+        }
+
+        globalVar = {};
+
+        globalVar.prevArrow = function() {
+            var bc = document.getElementById('breadcrumbs');
+            bc.lastChild.click();
+            bc.removeChild(bc.lastChild);
+        };
+
+        globalVar.resetRoot = function() {
+            hideChildsOfChilds(oldRoot);
+            showChilds(oldRoot);
+            updateRoot(oldRoot);
+            var bc = document.getElementById('breadcrumbs');
+            bc.innerHTML = '';
+        };
+
+        currNode = undefined;
+
+        globalVar.updateByName = function(name) {
+            findNodeByName(name);
+            if (currNode) {
+                updateSideBar(currNode);
+                hideChildsOfChilds(currNode);
+                showChilds(currNode);
+                updateRoot(currNode);
+                updateBreadcrumbs(currNode);
+                var ba = document.getElementsByClassName('back-arrow')[0];
+                ba.classList.add('hide');
+            } else {
+                var bc = document.getElementById('breadcrumbs');
+                bc.innerHTML = '';
+            }
+        }
+    }
+
+</script>
+
+</body>
+</html>
