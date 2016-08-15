@@ -11,3 +11,9 @@ services:
      - elasticsearch
   elasticsearch:
     image: elasticsearch:2.3
+  slackbot:
+    image: slackbot
+    links:
+      - starbook-backend
+    env_file:
+      - slackbot/slackbot.env
