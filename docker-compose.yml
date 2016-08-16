@@ -1,19 +1,43 @@
 version: '2'
 services:
+
   starbook-backend:
     build: starbook-backend
     ports:
-     - "5000:5000"
+      - "5000:5000"
     env_file:
-     - starbook-backend/starbook-backend-vars.env
-    image: starbook-backend
+      - starbook-backend/starbook-backend-example.env
     links:
-     - elasticsearch
+      - elasticsearch
+
   elasticsearch:
     image: elasticsearch:2.3
+    ports:
+      - "9200:9200"
+
   slackbot:
-    image: slackbot
+    build: slackbot
     links:
       - starbook-backend
     env_file:
-      - slackbot/slackbot.env
+      - slackbot/slackbot-example.env
+
+  starbook-front:
+    build: starbook-front
+    env_file:
+      - starbook-front/starbook-front-example.env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./starbook-front/env:/var/www/env/
+
+  kibana:
+    image: kibana:4.5.2
+    ports:
+      - "5601:5601"
+    links:
+      - elasticsearch
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
