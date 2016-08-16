@@ -1,3 +1,4 @@
 FROM node:4
 RUN npm install -g serve
-CMD serve -p ${PORT} ${SERVE_DIR}
+COPY . /var/www/
+CMD serve -p ${PORT} /var/www
