@@ -101,8 +101,8 @@
             background-color: white;
         }
 
-        .user-details-wrapper{
-
+        .user-image {
+            border-radius: 50%;
         }
 
         .user-title {
@@ -378,23 +378,31 @@
                     })
                     .on("click", click);
 
+            var clip = nodeEnter.append("svg:clipPath")
+                    .attr("id", "clip")
+                    .append("svg:circle")
+                    .attr("cx", "0")
+                    .attr("cy", "0")
+                    .attr("r", "40");
+
             // Append images
             nodeEnter.append("svg:image")
                     .attr("xlink:href", function (d) {
                         return d.image;
                     })
                     .attr("x", function (d) {
-                        return -25;
+                        return -40;
                     })
                     .attr("y", function (d) {
-                        return -25;
+                        return -40;
                     })
                     .attr("height", 80)
-                    .attr("width", 80);
+                    .attr("width", 80)
+                    .attr("clip-path", "url(#clip)");
 
             nodeEnter.append("text")
                     .attr("x", function (d) {
-                        return 0;
+                        return '-' + (d.name.length * 3.5) + 'px';
                     })
                     .attr("dy", "6.25em")
                     .text(function (d) {
