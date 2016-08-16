@@ -1,3 +1,4 @@
+angular.module('myApp',[]);
 angular.element(document).ready(function(){
 
     //TODO - remove this
@@ -50,7 +51,7 @@ angular.element(document).ready(function(){
         }
     ];
 
-    var app = angular.module('myApp',[])
+    angular.module('myApp')
         .controller('myCtrl', ['$scope','store', '$http', 'elastic', '$timeout',function ($scope, store, $http, elastic, $timeout) {
             $scope.search = '';
             //$scope.names = store.getNames();
@@ -104,7 +105,7 @@ angular.element(document).ready(function(){
                 },
             };
         })
-        .factory('elastic', ['$http', '$timeout', function($http, $timeout){
+        .factory('elastic', ['$http', '$timeout', 'ENV', function($http, $timeout, ENV){
             return {
                 get: function(query, callback){
                     var config = {
@@ -114,7 +115,7 @@ angular.element(document).ready(function(){
                     }
 
                     $timeout(function() {
-                        $http.post('http://52.58.240.166:5000/query', {query: query}, config)
+                        $http.post(ENV.STAR_BOOK_API + '/query', {query: query}, config)
                             .success(function (data, status, headers, config) {
                                 callback(data);
                             })
@@ -124,7 +125,7 @@ angular.element(document).ready(function(){
                     });
                 },
                 tree: function () {
-                    return $http.get('http://52.58.240.166:5000/tree');
+                    return $http.get(ENV.STAR_BOOK_API + '/tree');
                 }
             }
         }]).controller('mainCtrl', ['$scope','store', '$http', 'elastic',function ($scope, store, $http, elastic) {
