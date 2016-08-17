@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
     <script src="app.js"></script>
     <script src="env/env.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 
     <meta charset="utf-8">
@@ -68,10 +69,6 @@
     </div>
 
 </div>
-
-
-<!-- load the d3.js library -->
-<script src="http://d3js.org/d3.v3.min.js"></script>
 
 <script>
     function toggleSideBar() {
@@ -155,20 +152,20 @@
                     links = tree.links(nodes);
 
             // Normalize for fixed-depth.
-            nodes.forEach(function (d) {
-                d.y = d.depth * 180;
+            nodes.forEach(function(d) {
+                d.y = d.depth * 200;
             });
 
             // Update the nodes…
             var node = svg.selectAll("g.node")
-                    .data(nodes, function (d) {
+                    .data(nodes, function(d) {
                         return d.id || (d.id = ++i);
                     });
 
             // Enter any new nodes at the parent's previous position.
             var nodeEnter = node.enter().append("g")
                     .attr("class", "node")
-                    .attr("transform", function (d) {
+                    .attr("transform", function(d) {
                         return "translate(" + d.x + "," + d.y + ")";
                     })
                     .on("click", click);
@@ -182,13 +179,13 @@
 
             // Append images
             nodeEnter.append("svg:image")
-                    .attr("xlink:href", function (d) {
+                    .attr("xlink:href", function(d) {
                         return d.image;
                     })
-                    .attr("x", function (d) {
+                    .attr("x", function() {
                         return -40;
                     })
-                    .attr("y", function (d) {
+                    .attr("y", function() {
                         return -40;
                     })
                     .attr("height", 80)
@@ -196,11 +193,11 @@
                     .attr("clip-path", "url(#clip)");
 
             nodeEnter.append("text")
-                    .attr("x", function (d) {
-                        return '-' + (d.name.length * 3.5) + 'px';
+                    .attr("x", function() {
+                        return -27.5;
                     })
                     .attr("dy", "6.25em")
-                    .text(function (d) {
+                    .text(function(d) {
                         var nameArr = d.name.split(' ');
                         if (nameArr.length == 1) {
                             return d.name;
@@ -208,15 +205,6 @@
                         return nameArr[0] + ' ' + nameArr[1][0] + '.';
                     })
                     .style("fill-opacity", 1e-6);
-
-//            nodeEnter.append("text")
-//                    .attr("x", "0")
-//                    .attr("dy", "9.25em")
-//                    .text(function (d) {
-//                        if (d._children)
-//                            return '' + d._children.length + ' children';
-//                        return '';
-//                    }).style("font-size", '8px');
 
             // Transition nodes to their new position.
             var nodeUpdate = node.transition()
@@ -318,7 +306,7 @@
                 for (var i = 0; i < childsToRemove.length; i++) {
                     this.parentElement.removeChild(childsToRemove[i]);
                 }
-
+                this.parentElement.removeChild(this);
                 hideChildsOfChilds(node);
                 showChilds(node);
                 updateRoot(node);
@@ -441,7 +429,6 @@
         globalVar.prevArrow = function() {
             var bc = document.getElementById('breadcrumbs');
             bc.lastChild.click();
-            bc.removeChild(bc.lastChild);
         };
 
         globalVar.resetRoot = function() {
