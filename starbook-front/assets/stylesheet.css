@@ -17,6 +17,25 @@ body {
     stroke-width: 2px;
 }
 
+.personal-info {
+    position: absolute;
+    right: 425px;
+    top: 15px;
+}
+
+.personal-info a {
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    padding-right: 0px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #b6d7ff;
+}
+
 .side-bar {
     width: 385px;
     height: 100%;

@@ -27,7 +27,10 @@
     <div id="breadcrumbs">
     </div>
 </div>
-
+<div class="personal-info">
+    <a>Me</a>
+    <a>Logout</a>
+</div>
 <img src="images/ring.svg" class="loader" style="">
 <a href="#" onclick="globalVar.prevArrow()" class="back-arrow hide"></a>
 
@@ -40,7 +43,6 @@
         </div>
 
         <div class="user-details-wrapper">
-            <div></div>
             <img class="user-image" src="images/1.png" width="90">
             <div class="user-name">Star Book</div>
             <div class="user-title">Magician</div>
@@ -215,6 +217,7 @@
 
 
             nodeUpdate.select("text")
+                    .duration(1000)
                     .style("fill-opacity", 1);
 
             // Transition exiting nodes to the parent's new position.
@@ -251,14 +254,14 @@
             // Transition exiting nodes to the parent's new position.
             link.exit().transition()
                     .duration(duration)
-                    .attr("d", function (d) {
+                    .attr("d", function() {
                         var o = {x: source.x, y: source.y};
                         return diagonal({source: o, target: o});
                     })
                     .remove();
 
             // Stash the old positions for transition.
-            nodes.forEach(function (d) {
+            nodes.forEach(function(d) {
                 d.x0 = d.x;
                 d.y0 = d.y;
             });
