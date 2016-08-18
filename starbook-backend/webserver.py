@@ -19,7 +19,6 @@ ORIGIN = os.environ['ORIGIN']
 APPLICATION_ROOT = os.environ['APPLICATION_ROOT'] or ''
 
 
-@app.route(APPLICATION_ROOT + '/add_person', methods=['POST'])
 def add_person():
     person = request.json
     missing_keys = [key for key in PERSON_REQUIRED_KEYS if key not in person]
@@ -44,7 +43,6 @@ def add_person():
     return jsonify({'created': res['created']})
 
 
-@app.route(APPLICATION_ROOT + '/update_person', methods=['POST'])
 def update_person():
     person = request.json
     try:
@@ -66,7 +64,6 @@ def update_person():
     return jsonify({'status': 'ok'})
 
 
-@app.route(APPLICATION_ROOT + '/query', methods=['POST'])
 def query():
     query = request.json
     res = es.search(PERSONS_INDEX, PERSONS_TYPE, {
@@ -80,7 +77,6 @@ def query():
     return jsonify(res)
 
 
-@app.route(APPLICATION_ROOT + '/tree', methods=['GET'])
 def tree():
     res = es.search(PERSONS_INDEX, PERSONS_TYPE, {'size': 1000})
     persons = {}
@@ -100,6 +96,24 @@ def tree():
         p = persons[persons[p]['boss']][PERSON_UNIQUE_KEY]
 
     return jsonify(persons[p])
+
+
+@app.route(APPLICATION_ROOT, methods=['GET', 'POST'])
+def all_routes():
+    action = (request.args and request.args.get('action', None)) or (request.json and request.json.get('action', None))
+    if not action:
+        return '<html><body><h1>Hi there!</h1></body></html>'
+
+    if action == 'tree':
+        return tree()
+    elif action == 'query':
+        return query()
+    elif action == 'update_person':
+        return update_person()
+    elif action == 'add_person':
+        return add_person()
+    else:
+        return '<html><body><h1>Unknown action</h1></body></html>', 404
 
 
 @app.after_request
