@@ -1,4 +1,6 @@
 angular.module('myApp')
   .constant("ENV", {
-    "STAR_BOOK_API": "http://127.0.0.1:5000"
+    "GOOGLE_SIGN_IN_CLIENT_ID": "some-client-id.apps.googleusercontent.com",
+    "SEND_COOKIES": false
+    "STAR_BOOK_API": "http://localhost:5000/api",
   });

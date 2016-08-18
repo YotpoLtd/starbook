@@ -1,4 +1,4 @@
-angular.module('myApp',[]);
+angular.module('myApp', ['ngCookies']);
 angular.element(document).ready(function(){
 
     //TODO - remove this
@@ -125,14 +125,9 @@ angular.element(document).ready(function(){
                     });
                 },
                 tree: function () {
-                    return $http.get(ENV.STAR_BOOK_API + '/tree');
+                    return $http.get(ENV.STAR_BOOK_API + '/tree', { withCredentials: ENV.SEND_COOKIES });
                 }
             }
-        }]).controller('mainCtrl', ['$scope','store', '$http', 'elastic',function ($scope, store, $http, elastic) {
-            $scope.search = '';
-            elastic.tree().success(function (response) {
-                populateGraph(response);
-            })
         }]);
 
     angular.bootstrap(document,['myApp']);

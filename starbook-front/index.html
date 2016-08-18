@@ -7,8 +7,12 @@
     <script src="https://code.angularjs.org/1.5.0/angular.min.js"></script>
     <script src="https://code.angularjs.org/1.5.0/angular-route.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+    <script src="https://apis.google.com/js/api:client.js"></script>
+    <script src="node_modules/angular-cookies/angular-cookies.min.js"></script>
+
     <script src="app.js"></script>
     <script src="env/env.js"></script>
+    <script src="main_controller.js"></script>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 
     <meta charset="utf-8">
@@ -224,7 +228,9 @@
 
 </head>
 
-<body background="images/BG_img.png" ng-controller="mainCtrl">
+<body background="images/BG_img.png" ng-controller="mainCtrl as mainCtrl">
+<button ng-show="mainCtrl.auth" ng-click="mainCtrl.signOut()">sign out</button>
+<div>
 <div class="navbar">
     <img src="images/Yotpo-Logo.png" class="yo-logo"/>
     <img src="images/home.png" class="home" onclick="globalVar.resetRoot()" style="cursor: pointer"/>
@@ -678,5 +684,6 @@
 
 </script>
 
+</div>
 </body>
 </html>
