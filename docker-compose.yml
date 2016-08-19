@@ -3,6 +3,7 @@ services:
 
   starbook-backend:
     build: starbook-backend
+    image: starbook-backend
     ports:
       - "5000:5000"
     env_file:
@@ -24,6 +25,7 @@ services:
 
   starbook-front:
     build: starbook-front
+    image: starbook-front
     env_file:
       - starbook-front/starbook-front-example.env
     ports:

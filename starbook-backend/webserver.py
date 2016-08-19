@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from elasticsearch import Elasticsearch
+from oauth2client import client, crypt
 import os
 
 app = Flask(__name__)
@@ -10,9 +11,14 @@ PERSONS_INDEX = os.environ['PERSONS_INDEX']
 PERSONS_TYPE = os.environ['PERSONS_TYPE']
 PERSON_UNIQUE_KEY = os.environ['PERSON_UNIQUE_KEY']
 SOURCE_HOST = os.environ['SOURCE_HOST']
+CLIENT_IDS = os.environ['CLIENT_IDS'].split(',')
+CLIENT_ID = os.environ['CLIENT_ID']
+APPS_DOMAIN_NAME = os.environ['APPS_DOMAIN_NAME']
+DEBUG = os.environ['DEBUG'].lower() == 'true'
+ORIGIN = os.environ['ORIGIN']
+APPLICATION_ROOT = os.environ['APPLICATION_ROOT'] or ''
 
 
-@app.route('/add_person', methods=['POST'])
 def add_person():
     person = request.json
     missing_keys = [key for key in PERSON_REQUIRED_KEYS if key not in person]
@@ -37,7 +43,6 @@ def add_person():
     return jsonify({'created': res['created']})
 
 
-@app.route('/update_person', methods=['POST'])
 def update_person():
     person = request.json
     try:
@@ -59,7 +64,6 @@ def update_person():
     return jsonify({'status': 'ok'})
 
 
-@app.route('/query', methods=['POST'])
 def query():
     query = request.json
     res = es.search(PERSONS_INDEX, PERSONS_TYPE, {
@@ -73,7 +77,6 @@ def query():
     return jsonify(res)
 
 
-@app.route('/tree', methods=['GET'])
 def tree():
     res = es.search(PERSONS_INDEX, PERSONS_TYPE, {'size': 1000})
     persons = {}
@@ -95,12 +98,55 @@ def tree():
     return jsonify(persons[p])
 
 
+@app.route(APPLICATION_ROOT, methods=['GET', 'POST'])
+def all_routes():
+    action = (request.args and request.args.get('action', None)) or (request.json and request.json.get('action', None))
+    if not action:
+        return '<html><body><h1>Hi there!</h1></body></html>'
+
+    if action == 'tree':
+        return tree()
+    elif action == 'query':
+        return query()
+    elif action == 'update_person':
+        return update_person()
+    elif action == 'add_person':
+        return add_person()
+    else:
+        return '<html><body><h1>Unknown action</h1></body></html>', 404
+
+
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    allow_origin = '*' if DEBUG else ORIGIN
+    response.headers.add('Access-Control-Allow-Origin', allow_origin)
+    response.headers.add('Access-Control-Allow-Credentials', str(not DEBUG).lower())
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     return response
+
+
+@app.before_request
+def verify_token():
+    if DEBUG:
+        return
+    token = request.cookies.get('starbook-token') or (request.json and request.json.get('starbook-token'))
+    if request.json:
+        request.json.pop('starbook-token', None)
+    if not token:
+        return jsonify({'error': 'no token'}), 401
+    try:
+        idinfo = client.verify_id_token(token, CLIENT_ID)
+        # If multiple clients access the backend server:
+        if idinfo['aud'] not in CLIENT_IDS:
+            return jsonify({'error': 'Unrecognized client'}), 401
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            return jsonify({'error': 'Wrong issuer'}), 401
+        if idinfo['hd'] != APPS_DOMAIN_NAME:
+            return jsonify({'error': 'Wrong hosted domain'}), 401
+    except crypt.AppIdentityError as e:
+        # Invalid token
+        return jsonify({'error': 'Invalid token'}), 401
 
 
 if __name__ == "__main__":

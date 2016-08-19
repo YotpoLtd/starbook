@@ -1,4 +1,4 @@
-angular.module('myApp',[]);
+angular.module('myApp', ['ngCookies']);
 angular.element(document).ready(function(){
 
     //TODO - remove this
@@ -104,36 +104,7 @@ angular.element(document).ready(function(){
                     return names;
                 },
             };
-        })
-        .factory('elastic', ['$http', '$timeout', 'ENV', function($http, $timeout, ENV){
-            return {
-                get: function(query, callback){
-                    var config = {
-                        headers : {
-                            'Content-Type': 'application/json'
-                        }
-                    }
-
-                    $timeout(function() {
-                        $http.post(ENV.STAR_BOOK_API + '/query', {query: query}, config)
-                            .success(function (data, status, headers, config) {
-                                callback(data);
-                            })
-                            .error(function (data, status, header, config) {
-
-                            });
-                    });
-                },
-                tree: function () {
-                    return $http.get(ENV.STAR_BOOK_API + '/tree');
-                }
-            }
-        }]).controller('mainCtrl', ['$scope','store', '$http', 'elastic',function ($scope, store, $http, elastic) {
-            $scope.search = '';
-            elastic.tree().success(function (response) {
-                populateGraph(response);
-            })
-        }]);
+        });
 
     angular.bootstrap(document,['myApp']);
 
