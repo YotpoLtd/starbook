@@ -14,218 +14,14 @@
     <script src="env/env.js"></script>
     <script src="main_controller.js"></script>
     <script src="elastic.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 
     <meta charset="utf-8">
 
     <title>StarBook</title>
 
-    <style>
-
-        body {
-            margin: 0;
-            font-family: 'Open Sans';
-        }
-
-        .node {
-            cursor: pointer;
-        }
-
-        .node text {
-            font: 12px 'Open Sans';
-        }
-
-        .link {
-            fill: none;
-            stroke: #ccc;
-            stroke-width: 2px;
-        }
-
-        .side-bar {
-            width: 385px;
-            height: 100%;
-            right: 6px;
-            position: absolute;
-            border-left: 1px solid lightgray;
-            z-index: 99999;
-            background-color: #fff;
-            -webkit-box-shadow: 0 0 40px rgba(72,72,72,.05);
-            -moz-box-shadow: 0 0 40px rgba(72,72,72,.05);
-            box-shadow: 0 0 40px rgba(72,72,72,.05);
-            border: solid 1px rgba(218,218,218,.58);
-            transition: right 0.7s linear;
-        }
-
-        svg {
-            position: absolute;
-            top: 230px;
-            left: 84px;
-        }
-
-        #breadcrumbs {
-            position: absolute;
-            top: 15px;
-            left: 92px;
-        }
-
-        #breadcrumbs a {
-            position: relative;
-            display: inline-block;
-            padding: 10px;
-            font-size: 13px;
-            font-weight: bold;
-            text-align: center;
-            padding-right: 0px;
-            cursor: pointer;
-            text-decoration: none;
-            color: #b6d7ff;
-        }
-        #breadcrumbs a img {
-            margin-right: 6px;
-        }
-
-        .back-arrow {
-            position: absolute;
-            left: 422px;
-            top: 114px;
-            cursor: pointer;
-            text-decoration: none;
-            background-image: url('images/arrow.png');
-            width: 33px;
-            height: 33px;
-        }
-
-        .hide {
-            display: none !important;
-        }
-
-        .user-table {
-            width: 100%;
-            position: absolute;
-            top: 0;
-            background-color: white;
-        }
-
-        .user-image {
-            border-radius: 50%;
-        }
-
-        .user-title {
-            position: relative;
-            top: -64px;
-            left: 119px;
-            color: #2895F1;
-            max-width: 210px;
-        }
-
-        .skills {
-            padding-bottom: 11px;
-        }
-
-        .user-skills {
-            padding-bottom: 5px;
-            margin-right: 5px;
-        }
-
-        .user-skill {
-            border: 1px solid #3bb3f1;
-            border-radius: 18px;
-            padding: 4px 9px 4px 11px;
-            margin-right: 5px;
-        }
-
-        .user-hobbies {
-            padding-bottom: 5px;
-        }
-
-        .table-row {
-            cursor: pointer;
-        }
-
-        .navbar {
-            background-color: #2f84ed;
-            width: 100%;
-            height: 70px;
-        }
-
-        .search-bar {
-            width: 356px;
-            padding-left: 16px;
-            height: 38px;
-            -webkit-border-radius: 5px;
-            -moz-border-radius: 5px;
-            border-radius: 5px;
-            border: none;
-            background-color: #fff;
-        }
-
-        .seperator {
-            border: #efefef 1px solid;
-        }
-
-        .yo-logo {
-            width: 40px;
-            margin-top: 13px;
-            margin-left: 10px;
-        }
-
-        .user-details-wrapper {
-            margin: 25px;
-            font-family: "Open Sans";
-            font-size: 15px;
-            font-weight: bold; color: #56575f;
-        }
-
-        .user-email {
-            position: relative;
-            top: 26px;
-            left: 46px;
-        }
-
-        .user-phone {
-            position: relative;
-            top: 26px;
-            left: 46px;
-        }
-
-        .home {
-            width: 24px;
-            margin-bottom: 7px;
-            margin-left: 10px;
-        }
-
-        .user-name {
-            position: relative;
-            left: 120px;
-            top: -72px;
-        }
-
-        .user-slack {
-            position: relative;
-            top: 26px;
-            left: 46px;
-            text-decoration: none;
-        }
-
-        .open-side-bar {
-            position: absolute;
-            left: -55px;
-            top: 21px;
-            cursor: pointer;
-        }
-
-        .sider {
-            position: absolute;
-            right: -386px;
-        }
-
-        .loader {
-            position: absolute;
-            top: 271px;
-            left: 353px;
-        }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="assets/stylesheet.css">
 
 </head>
 
@@ -238,7 +34,10 @@
     <div id="breadcrumbs">
     </div>
 </div>
-
+<div class="personal-info">
+    <a>Me</a>
+    <a>Logout</a>
+</div>
 <img src="images/ring.svg" class="loader" style="">
 <a href="#" onclick="globalVar.prevArrow()" class="back-arrow hide"></a>
 
@@ -246,12 +45,11 @@
     <img src="images/open.png" class="open-side-bar" onclick="toggleSideBar()"/>
     <div ng-controller="myCtrl">
 
-        <div style="position: absolute;right: 9px;top: -57px;">
+        <div class="search-bar-container">
             <input type="text" ng-model="search" ng-model-options="{ debounce: 1000 }" placeholder="Search" class="search-bar" ng-change="textChanged()" ng-blur="onLeaveSearch()"/>
         </div>
 
         <div class="user-details-wrapper">
-            <div></div>
             <img class="user-image" src="images/1.png" width="90">
             <div class="user-name">Star Book</div>
             <div class="user-title">Magician</div>
@@ -283,7 +81,7 @@
 
 
 <!-- load the d3.js library -->
-<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 
 <script>
     function toggleSideBar() {
@@ -367,20 +165,20 @@
                     links = tree.links(nodes);
 
             // Normalize for fixed-depth.
-            nodes.forEach(function (d) {
-                d.y = d.depth * 180;
+            nodes.forEach(function(d) {
+                d.y = d.depth * 200;
             });
 
             // Update the nodes…
             var node = svg.selectAll("g.node")
-                    .data(nodes, function (d) {
+                    .data(nodes, function(d) {
                         return d.id || (d.id = ++i);
                     });
 
             // Enter any new nodes at the parent's previous position.
             var nodeEnter = node.enter().append("g")
                     .attr("class", "node")
-                    .attr("transform", function (d) {
+                    .attr("transform", function(d) {
                         return "translate(" + d.x + "," + d.y + ")";
                     })
                     .on("click", click);
@@ -394,13 +192,13 @@
 
             // Append images
             nodeEnter.append("svg:image")
-                    .attr("xlink:href", function (d) {
+                    .attr("xlink:href", function(d) {
                         return d.image;
                     })
-                    .attr("x", function (d) {
+                    .attr("x", function() {
                         return -40;
                     })
-                    .attr("y", function (d) {
+                    .attr("y", function() {
                         return -40;
                     })
                     .attr("height", 80)
@@ -408,11 +206,11 @@
                     .attr("clip-path", "url(#clip)");
 
             nodeEnter.append("text")
-                    .attr("x", function (d) {
-                        return '-' + (d.name.length * 3.5) + 'px';
+                    .attr("x", function() {
+                        return -27.5;
                     })
                     .attr("dy", "6.25em")
-                    .text(function (d) {
+                    .text(function(d) {
                         var nameArr = d.name.split(' ');
                         if (nameArr.length == 1) {
                             return d.name;
@@ -420,15 +218,6 @@
                         return nameArr[0] + ' ' + nameArr[1][0] + '.';
                     })
                     .style("fill-opacity", 1e-6);
-
-//            nodeEnter.append("text")
-//                    .attr("x", "0")
-//                    .attr("dy", "9.25em")
-//                    .text(function (d) {
-//                        if (d._children)
-//                            return '' + d._children.length + ' children';
-//                        return '';
-//                    }).style("font-size", '8px');
 
             // Transition nodes to their new position.
             var nodeUpdate = node.transition()
@@ -439,6 +228,7 @@
 
 
             nodeUpdate.select("text")
+                    .duration(1000)
                     .style("fill-opacity", 1);
 
             // Transition exiting nodes to the parent's new position.
@@ -475,14 +265,14 @@
             // Transition exiting nodes to the parent's new position.
             link.exit().transition()
                     .duration(duration)
-                    .attr("d", function (d) {
+                    .attr("d", function() {
                         var o = {x: source.x, y: source.y};
                         return diagonal({source: o, target: o});
                     })
                     .remove();
 
             // Stash the old positions for transition.
-            nodes.forEach(function (d) {
+            nodes.forEach(function(d) {
                 d.x0 = d.x;
                 d.y0 = d.y;
             });
@@ -530,7 +320,7 @@
                 for (var i = 0; i < childsToRemove.length; i++) {
                     this.parentElement.removeChild(childsToRemove[i]);
                 }
-
+                this.parentElement.removeChild(this);
                 hideChildsOfChilds(node);
                 showChilds(node);
                 updateRoot(node);
@@ -653,7 +443,6 @@
         globalVar.prevArrow = function() {
             var bc = document.getElementById('breadcrumbs');
             bc.lastChild.click();
-            bc.removeChild(bc.lastChild);
         };
 
         globalVar.resetRoot = function() {
