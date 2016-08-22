@@ -3,6 +3,7 @@ angular.module('myApp')
     return {
       get: function(query, callback) {
         var config = {
+          withCredentials: ENV.SEND_COOKIES,
           headers: {
             'Content-Type': 'application/json'
           }
@@ -20,6 +21,10 @@ angular.module('myApp')
       },
       tree: function() {
         return $http.post(ENV.STAR_BOOK_API, { action: 'tree' }, { withCredentials: ENV.SEND_COOKIES });
+      },
+      update: function(data) {
+        data['action'] = 'update_person';
+        return $http.post(ENV.STAR_BOOK_API, data, { withCredentials: ENV.SEND_COOKIES });
       }
     }
   }]);

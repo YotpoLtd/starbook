@@ -33,7 +33,7 @@
     </div>
 </div>
 <div class="personal-info">
-    <a>Me</a>
+    <a ng-click="mainCtrl.meClicked()">Me</a>
     <a ng-click="mainCtrl.signOut()">Logout</a>
 </div>
 <img src="images/ring.svg" class="loader" style="">
@@ -397,13 +397,13 @@
                 createLinks(nodes.reverse());
         }
 
-        function findNodeByName(name) {
+        function findNodeBy(findBy) {
             function searchTree(d) {
                 if (d.children)
                     d.children.forEach(searchTree);
                 else if (d._children)
                     d._children.forEach(searchTree);
-                if (d.name == name) {
+                if (d.email == findBy['email'] || d.name == findBy['name']) {
                     currNode = d;
                 }
             }
@@ -450,8 +450,8 @@
 
         currNode = undefined;
 
-        globalVar.updateByName = function(name) {
-            findNodeByName(name);
+        globalVar.updateBy = function(findBy) {
+            findNodeBy(findBy);
             if (currNode) {
                 updateSideBar(currNode);
                 hideChildsOfChilds(currNode);
