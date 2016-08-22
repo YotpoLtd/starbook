@@ -100,6 +100,9 @@ def tree():
 
 @app.route(APPLICATION_ROOT, methods=['GET', 'POST'])
 def all_routes():
+    if request.method == 'OPTIONS':
+        return ''
+
     action = (request.args and request.args.get('action', None)) or (request.json and request.json.get('action', None))
     if not action:
         return '<html><body><h1>Hi there!</h1></body></html>'
@@ -122,13 +125,13 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', allow_origin)
     response.headers.add('Access-Control-Allow-Credentials', str(not DEBUG).lower())
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
 
 @app.before_request
 def verify_token():
-    if DEBUG:
+    if DEBUG or request.method == 'OPTIONS':
         return
     token = request.cookies.get('starbook-token') or (request.json and request.json.get('starbook-token'))
     if request.json:
