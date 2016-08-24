@@ -1,6 +1,6 @@
 angular.module('myApp')
-  .controller('mainCtrl', ['$scope', 'store', '$http', 'elastic', 'ENV', '$timeout', '$window', '$cookies',
-    function($scope, store, $http, elastic, ENV, $timeout, $window, $cookies) {
+  .controller('mainCtrl', ['$scope', '$http', 'elastic', 'ENV', '$timeout', '$window', '$cookies',
+    function($scope, $http, elastic, ENV, $timeout, $window, $cookies) {
       var auth2;
       var self = this;
       var starbook_token = 'starbook-token';
@@ -15,7 +15,7 @@ angular.module('myApp')
         if (ENV.SEND_COOKIES) {
           auth2 = gapi.auth2.init({
             client_id: ENV.GOOGLE_SIGN_IN_CLIENT_ID,
-            cookiepolicy: 'single_host_origin',
+            cookiepolicy: 'single_host_origin'
             // Request scopes in addition to 'profile' and 'email'
             //scope: 'additional_scope'
           });
@@ -26,10 +26,10 @@ angular.module('myApp')
                 self.email = auth2.currentUser.get().getBasicProfile().getEmail();
                 populateGraph(response);
               }).error(function() {
-                self.signIn();
+                //self.signIn();
               });
             } else {
-              self.signIn();
+              //self.signIn();
             }
           })
         } else {
