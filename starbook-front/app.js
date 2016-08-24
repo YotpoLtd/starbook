@@ -87,7 +87,7 @@ angular.element(document).ready(function(){
             }
 
             $scope.nameClicked =  function (name) {
-                globalVar.updateByName(name);
+                globalVar.updateBy({name: name});
             }
 
             $scope.showTable = false;

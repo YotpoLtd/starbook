@@ -2,9 +2,12 @@ from flask import Flask, request, jsonify
 from elasticsearch import Elasticsearch
 from oauth2client import client, crypt
 import os
+from redis import StrictRedis
+import json
 
 app = Flask(__name__)
 es = Elasticsearch([{"host": os.environ['ELASTIC_HOST'], "port": os.environ['ELASTIC_PORT']}])
+redis = StrictRedis(host=os.environ['REDIS_HOST'], port=os.environ['REDIS_PORT'], db=os.environ['REDIS_DB_NUM'])
 
 PERSON_REQUIRED_KEYS = os.environ['PERSON_REQUIRED_KEYS'].split(',')
 PERSONS_INDEX = os.environ['PERSONS_INDEX']
@@ -17,6 +20,13 @@ APPS_DOMAIN_NAME = os.environ['APPS_DOMAIN_NAME']
 DEBUG = os.environ['DEBUG'].lower() == 'true'
 ORIGIN = os.environ['ORIGIN']
 APPLICATION_ROOT = os.environ['APPLICATION_ROOT'] or ''
+REDIS_EXPIRY = int(os.environ['REDIS_EXPIRY'])
+
+REDIS_RESPONSE_TREE_KEY = 'response:tree'
+
+
+def clear_cache():
+    redis.delete(REDIS_RESPONSE_TREE_KEY)
 
 
 def add_person():
@@ -40,11 +50,11 @@ def add_person():
     except:
         id = None
     res = es.index(PERSONS_INDEX, PERSONS_TYPE, person, id)
+    clear_cache()
     return jsonify({'created': res['created']})
 
 
-def update_person():
-    person = request.json
+def update_person_with_json(person):
     try:
         existing = es.search(PERSONS_INDEX, PERSONS_TYPE, {
             'query': {
@@ -61,7 +71,13 @@ def update_person():
         return jsonify({'status': 'Not found'}), 404
     found['_source'].update(person)
     es.index(PERSONS_INDEX, PERSONS_TYPE, found['_source'], found['_id'])
+    clear_cache()
     return jsonify({'status': 'ok'})
+
+
+def update_person():
+    person = request.json
+    return update_person_with_json(person)
 
 
 def query():
@@ -78,6 +94,9 @@ def query():
 
 
 def tree():
+    cached = redis.get(REDIS_RESPONSE_TREE_KEY)
+    if cached:
+        return jsonify(json.loads(cached.decode()))
     res = es.search(PERSONS_INDEX, PERSONS_TYPE, {'size': 1000})
     persons = {}
     for p in res['hits']['hits']:
@@ -95,7 +114,9 @@ def tree():
     while persons.get(persons[p]['boss']):
         p = persons[persons[p]['boss']][PERSON_UNIQUE_KEY]
 
-    return jsonify(persons[p])
+    res = persons[p]
+    redis.set(REDIS_RESPONSE_TREE_KEY, json.dumps(res).encode(), ex=REDIS_EXPIRY)
+    return jsonify(res)
 
 
 @app.route(APPLICATION_ROOT, methods=['GET', 'POST'])
@@ -103,7 +124,7 @@ def all_routes():
     if request.method == 'OPTIONS':
         return ''
 
-    action = (request.args and request.args.get('action', None)) or (request.json and request.json.get('action', None))
+    action = (request.args and request.args.pop('action', None)) or (request.json and request.json.pop('action', None))
     if not action:
         return '<html><body><h1>Hi there!</h1></body></html>'
 
@@ -150,6 +171,23 @@ def verify_token():
     except crypt.AppIdentityError as e:
         # Invalid token
         return jsonify({'error': 'Invalid token'}), 401
+
+    outdated = False
+    google_id_redis_key = 'google_id:{}'.format(idinfo['sub'])
+    cached_google_info = redis.get(google_id_redis_key)
+    if cached_google_info:
+        google_info = json.loads(cached_google_info.decode())
+        if google_info['image'] != idinfo['picture'] or google_info[PERSON_UNIQUE_KEY] != idinfo['email']:
+            outdated = True
+    else:
+        outdated = True
+
+    if outdated:
+        update_person_with_json(
+            {PERSON_UNIQUE_KEY: idinfo['email'], 'image': idinfo['picture'], 'google_id': idinfo['sub']})
+        redis.set(google_id_redis_key,
+                  json.dumps({'image': idinfo['picture'], PERSON_UNIQUE_KEY: idinfo['email']}).encode(),
+                  ex=REDIS_EXPIRY)
 
 
 if __name__ == "__main__":

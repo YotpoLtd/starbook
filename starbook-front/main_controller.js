@@ -21,14 +21,15 @@ angular.module('myApp')
           });
 
           auth2.then(function() {
-            if (!auth2.isSignedIn.get()) {
-              self.signIn();
-            } else {
+            if (auth2.isSignedIn.get()) {
               elastic.tree().success(function(response) {
+                self.email = auth2.currentUser.get().getBasicProfile().getEmail();
                 populateGraph(response);
               }).error(function() {
                 self.signIn();
               });
+            } else {
+              self.signIn();
             }
           })
         } else {
@@ -62,5 +63,11 @@ angular.module('myApp')
           });
         });
       };
+
+      self.meClicked = function() {
+        if (self.email) {
+          globalVar.updateBy({email: self.email});
+        }
+      }
 
     }]);
