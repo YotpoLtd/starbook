@@ -44,7 +44,7 @@
     <div ng-controller="myCtrl">
 
         <div class="search-bar-container">
-            <input type="text" ng-model="search" ng-model-options="{ debounce: 1000 }" placeholder="Search" class="search-bar" ng-change="textChanged()" ng-blur="onLeaveSearch()"/>
+            <input type="text" ng-model="search" ng-model-options="{ debounce: 200 }" placeholder="Search" class="search-bar" ng-change="textChanged()" ng-blur="onLeaveSearch()"/>
         </div>
 
         <div class="user-details-wrapper">
