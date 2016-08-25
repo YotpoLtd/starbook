@@ -42,7 +42,7 @@ body {
     right: 6px;
     position: absolute;
     border-left: 1px solid lightgray;
-    z-index: 99999;
+    z-index: 1000;
     background-color: #fff;
     -webkit-box-shadow: 0 0 40px rgba(72,72,72,.05);
     -moz-box-shadow: 0 0 40px rgba(72,72,72,.05);
@@ -225,4 +225,53 @@ svg {
     position: absolute;
     top: 271px;
     left: 353px;
+}
+
+.modal-backdrop.in {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background-color: #000000;
+    opacity: 0.9;
+}
+
+.modal {
+    display: none;
+}
+
+.modal.in {
+    display: block;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    z-index: 1050;
+    width: 400px;
+    margin-left: -200px;
+    padding-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid #999;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    outline: none;
+    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    background-clip: padding-box;
+    text-align: center;
+    min-height: 200px;
+}
+.modal .yotpo-logo {
+    padding-top: 20px;
+    width: 80px;
+}
+
+.modal .sign-in {
+    width: 200px;
 }
