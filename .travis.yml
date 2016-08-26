@@ -1,0 +1,16 @@
+sudo: required
+
+services:
+  - docker
+
+language: generic
+
+script:
+  - docker login -u="$YOTPO_REGISTRY_USER" -p="$YOTPO_REGISTRY_PASSWORD" registry.yotpo.com
+  - docker build -t registry.yotpo.com/starbook-front:"$TRAVIS_COMMIT" starbook-front
+  - docker build -t registry.yotpo.com/starbook-backend:"$TRAVIS_COMMIT" starbook-backend
+  - docker images | grep starbook
+
+after_success:
+  - docker push registry.yotpo.com/starbook-front:"$TRAVIS_COMMIT"
+  - docker push registry.yotpo.com/starbook-backend:"$TRAVIS_COMMIT"
