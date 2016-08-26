@@ -62,7 +62,7 @@ body {
 svg {
     position: absolute;
     top: 220px;
-    left: 0;
+    left: calc(50% - 634px);
     max-height: 400px;
 }
 
@@ -84,13 +84,14 @@ svg {
     text-decoration: none;
     color: #b6d7ff;
 }
+
 #breadcrumbs a img {
     margin-right: 6px;
 }
 
 .back-arrow {
     position: absolute;
-    left: 422px;
+    left: calc(50% - 210px);
     top: 114px;
     cursor: pointer;
     text-decoration: none;
@@ -127,8 +128,6 @@ svg {
 }
 
 .user-skills {
-    padding-bottom: 5px;
-    margin-right: 5px;
 }
 
 .user-skill {
@@ -136,6 +135,8 @@ svg {
     border-radius: 18px;
     padding: 4px 9px 4px 11px;
     margin-right: 5px;
+    display: inline-block;
+    margin-bottom: 10px;
 }
 
 .user-hobbies {
@@ -232,7 +233,7 @@ svg {
 .loader {
     position: absolute;
     top: 271px;
-    left: 353px;
+    left: calc(50% - 273px);
 }
 
 .modal-backdrop.in {
