@@ -3,6 +3,14 @@ body {
     font-family: 'Open Sans';
 }
 
+.tree {
+    left: calc(50% - 400px);
+}
+
+.tree.slider {
+    left: calc(50% - 400px - 192px);
+}
+
 .node {
     cursor: pointer;
 }
