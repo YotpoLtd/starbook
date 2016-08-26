@@ -92,6 +92,12 @@
         } else {
             sideBar.classList.add('sider');
         }
+        var tree = document.getElementsByClassName("tree")[0];
+        if (tree.classList.contains('slider')){
+            setTimeout(function(){ tree.classList.remove('slider'); }, 500);
+        } else {
+            setTimeout(function(){ tree.classList.add('slider'); }, 500);
+        }
     }
 
     function populateGraph(treeData) {
@@ -112,7 +118,7 @@
                     return [d.x, d.y];
                 });
 
-        var svg = d3.select("body").append("svg")
+        var svg = d3.select("body").append("svg").attr('class', 'tree slider')
                 .attr("width", width + margin.right + margin.left)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
