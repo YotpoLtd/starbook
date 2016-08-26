@@ -167,7 +167,7 @@
 
             // Normalize for fixed-depth.
             nodes.forEach(function(d) {
-                d.y = d.depth * 200;
+                d.y = d.depth * 250;
             });
 
             // Update the nodes…
@@ -287,8 +287,7 @@
             showChilds(d);
             hideChildsOfChilds(d);
             updateBreadcrumbs(d);
-            root = d;
-            update(d);
+            updateRoot(d);
             updateSideBar(d);
         }
 
@@ -459,13 +458,11 @@
         globalVar.updateBy = function(findBy) {
             findNodeBy(findBy);
             if (currNode) {
-                updateSideBar(currNode);
-                hideChildsOfChilds(currNode);
                 showChilds(currNode);
-                updateRoot(currNode);
+                hideChildsOfChilds(currNode);
                 updateBreadcrumbs(currNode);
-                var ba = document.getElementsByClassName('back-arrow')[0];
-                ba.classList.add('hide');
+                updateRoot(currNode);
+                updateSideBar(currNode);
             } else {
                 var bc = document.getElementById('breadcrumbs');
                 bc.innerHTML = '';
