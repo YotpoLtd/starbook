@@ -29,6 +29,35 @@ body {
     stroke-width: 2px;
 }
 
+.add-skill{
+    top: 0;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+}
+
+.remove-skill{
+    bottom: 0;
+    position: absolute;
+    cursor: pointer;
+    right: 0;
+
+}
+
+.delete-skill-x{
+    top: -7px;
+    position: absolute;
+    right: -5px;
+    cursor: pointer;
+}
+
+.delete-hobby-x{
+    top: -7px;
+    position: absolute;
+    right: -5px;
+    cursor: pointer;
+}
+
 .personal-info {
     position: absolute;
     right: 25px;
@@ -55,7 +84,7 @@ body {
 
 .side-bar {
     width: 385px;
-    height: 90%;
+    height: 100%;
     right: 6px;
     position: absolute;
     border-left: 1px solid lightgray;
@@ -132,9 +161,11 @@ body {
 
 .skills {
     padding-bottom: 11px;
+    position: relative;
 }
 
 .user-skills {
+    position: relative;
 }
 
 .user-skill {
@@ -144,10 +175,12 @@ body {
     margin-right: 5px;
     display: inline-block;
     margin-bottom: 10px;
+    position: relative;
 }
 
 .user-hobbies {
     padding-bottom: 5px;
+    position: relative;
 }
 
 .table-row {

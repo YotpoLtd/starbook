@@ -8,8 +8,14 @@
     <script src="https://code.angularjs.org/1.5.0/angular-route.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
     <script src="https://apis.google.com/js/api:client.js"></script>
-    <script src="node_modules/angular-cookies/angular-cookies.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.0/angular-material.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-messages/1.5.8/angular-messages.min.js"></script>
+    <script src="http://ngmaterial.assets.s3.amazonaws.com/svg-assets-cache.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
 
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
     <script src="app.js"></script>
     <script src="env/env.js"></script>
     <script src="main_controller.js"></script>
@@ -61,11 +67,22 @@
                 <img src="images/slack.png">
             </a>
             <hr class="seperator"/>
-            <div class="skills">Professional Skills</div>
-            <div class="user-skills"><span class="user-skill">talking</span><span class="user-skill">gossiping</span><span class="user-skill">googeling</span></div>
+            <div class="skills">Professional Skills<span class="add-skill fa fa-plus" ng-click="addSkill()"></span></div>
+            <div class="user-skills">
+                <span class="user-skill">talking</span>
+                <span class="user-skill">gossiping</span>
+                <span class="user-skill">googeling</span>
+            </div>
+
             <hr class="seperator"/>
-            <div class="skills">Personal Hobbies</div>
-            <div class="user-hobbies"><span class="user-skill">golf</span><span class="user-skill">soccer</span><span class="user-skill">basketball</span></div>
+            <div class="skills">Personal Hobbies<span class="add-skill fa fa-plus" ng-click="addHobby()"></span>
+            </div>
+            <div class="user-hobbies">
+                <span class="user-skill">golf</span>
+                <span class="user-skill">soccer</span>
+                <span class="user-skill">basketball</span>
+            </div>
+
         </div>
 
         <table cellpadding="5" cellspacing="0" border="1" class="user-table" ng-show="showTable">
@@ -356,6 +373,10 @@
         }
 
         function updateSideBar(node) {
+
+            window.globalVar = window.globalVar || {};
+            window.globalVar.currentUser = node;
+
             var userWrapper = document.getElementsByClassName("user-details-wrapper")[0];
             userWrapper.setAttribute("display", "block");
 
@@ -376,12 +397,47 @@
 
             var userSkills = document.getElementsByClassName("user-skills")[0];
             userSkills.textContent = '';
-            for (var i = 0; node.expertise && i < node.expertise.length; i++) {
+
+            for (var i = 0; node.experties && i < node.experties.length; i++) {
                 var span = document.createElement('span');
-                span.textContent = node.expertise[i];
+                span.textContent = node.experties[i];
                 span.className = "user-skill";
                 userSkills.appendChild(span);
+                var x = $('<i class="delete-skill-x fa fa-times-circle"></i>');
+                x.data('skill-name', node.experties[i]);
+                x.click(function () {
+                    var skill = $(this).data('skill-name');
+                    var experties = globalVar.currentUser.experties;
+                    var index = experties.indexOf(skill);
+                    if (index > -1) {
+                        experties.splice(index, 1);
+                    }
+                    var data = {action : 'update_person'};
+                    data.experties = experties;
+                    data.email = globalVar.currentUser.email;
+
+                    $(this).closest('.user-skill').remove();
+
+                    updateDetails(data);
+
+                });
+                x.hide();
+                $(span).append(x);
             }
+
+            var minusSkill = $('<span class="remove-skill fa fa-minus"></span>');
+            minusSkill.data('hidden', true);
+            minusSkill.click(function() {
+                if (minusSkill.data('hidden')) {
+                    $('.delete-skill-x').show();
+                    minusSkill.data('hidden', false);
+                } else {
+                    $('.delete-skill-x').hide();
+                    minusSkill.data('hidden', true);
+                }
+
+            });
+            $(userSkills).append(minusSkill);
 
             var userHobbies = document.getElementsByClassName("user-hobbies")[0];
             userHobbies.textContent = '';
@@ -390,7 +446,58 @@
                 span.textContent = node.hobbies[i];
                 span.className = "user-skill";
                 userHobbies.appendChild(span);
+                var x = $('<i class="delete-hobby-x fa fa-times-circle"></i>');
+                x.hide();
+                x.data('hobby-name', node.hobbies[i]);
+                x.click(function () {
+                    var hobby = $(this).data('hobby-name');
+                    var hobbies = globalVar.currentUser.hobbies;
+                    var index = hobbies.indexOf(hobby);
+                    if (index > -1) {
+                        hobbies.splice(index, 1);
+                    }
+                    var data = {action : 'update_person'};
+                    data.hobbies = hobbies;
+                    data.email = globalVar.currentUser.email;
+
+                    $(this).closest('.user-skill').remove();
+
+                    updateDetails(data)
+                });
+                $(span).append(x);
             }
+
+            function updateDetails(data) {
+                $.ajax({
+                    type: "POST",
+                    url: STAR_BOOK_API,
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    xhrFields: {
+                        withCredentials: SEND_COOKIES
+                    }
+                });
+            }
+
+            var minusHobby = $('<span class="remove-skill fa fa-minus"></span>');
+            minusHobby.data('hidden', true);
+
+            minusHobby.click(function() {
+                if (minusHobby.data('hidden')) {
+                    $('.delete-hobby-x').show();
+                    minusHobby.data('hidden', false);
+                } else {
+                    $('.delete-hobby-x').hide();
+                    minusHobby.data('hidden', true);
+
+                }
+            });
+            $(userHobbies).append(minusHobby);
+
         }
 
         function showHideArrow() {
@@ -450,7 +557,7 @@
             }
         }
 
-        globalVar = {};
+        globalVar = globalVar || {};
 
         globalVar.prevArrow = function() {
             var bc = document.getElementById('breadcrumbs');
