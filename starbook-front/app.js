@@ -65,7 +65,7 @@ angular.element(document).ready(function() {
                     var additionalExpertises = result.split(',');
                     updateUserDetails(email, experties, additionalExpertises, 'experties', function () {
                         angular.forEach(additionalExpertises, function(value, key) {
-                            angular.element('.user-skills').append('<span class="user-skill">' + value + '</span>')
+                            angular.element('.user-skills').append('<span class="user-skill">' + value + '<i style="display: none" class="delete-skill-x fa fa-times-circle"></i></span>');
                         });
                     });
                 }, function() {
@@ -86,7 +86,7 @@ angular.element(document).ready(function() {
                     var additionalHobbies = result.split(',');
                     updateUserDetails(email, hobbies, additionalHobbies, 'hobbies', function () {
                         angular.forEach(additionalHobbies, function(value, key) {
-                            angular.element('.user-hobbies').append('<span class="user-skill">' + value + '</span>')
+                            angular.element('.user-hobbies').append('<span class="user-skill">' + value + '<i style="display: none" class="delete-hobby-x fa fa-times-circle"></i></span>')
                         });
                     });
                 }, function() {

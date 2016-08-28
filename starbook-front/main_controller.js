@@ -25,7 +25,7 @@ angular.module('myApp')
               if (self.auth) {
                 elastic.tree().success(function(response) {
                   self.email = auth2.currentUser.get().getBasicProfile().getEmail();
-                  populateGraph(response);
+                  populateGraph(response, self.email);
                 }).error(function() {
                   self.auth = false;
                 });
