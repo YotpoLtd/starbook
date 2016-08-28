@@ -32,12 +32,12 @@
     <div id="breadcrumbs">
     </div>
 </div>
-<div class="personal-info">
+<div class="personal-info slider">
     <a ng-click="mainCtrl.meClicked()">Me</a>
     <a ng-click="mainCtrl.signOut()">Logout</a>
 </div>
 <img src="images/ring.svg" class="loader" style="">
-<a href="#" onclick="globalVar.prevArrow()" class="back-arrow hide"></a>
+<a href="#" onclick="globalVar.prevArrow()" class="back-arrow slider hide"></a>
 
 <div class="side-bar">
     <img src="images/open.png" class="open-side-bar" onclick="toggleSideBar()"/>
@@ -93,10 +93,16 @@
             sideBar.classList.add('sider');
         }
         var tree = document.getElementsByClassName("tree")[0];
-        if (tree.classList.contains('slider')){
-            setTimeout(function(){ tree.classList.remove('slider'); }, 500);
+        var backArrow = document.getElementsByClassName("back-arrow")[0];
+        var personalInfo = document.getElementsByClassName("personal-info")[0];
+        if (tree.classList.contains('slider')) {
+            tree.classList.remove('slider');
+            backArrow.classList.remove('slider');
+            personalInfo.classList.remove('slider');
         } else {
-            setTimeout(function(){ tree.classList.add('slider'); }, 500);
+            tree.classList.add('slider');
+            backArrow.classList.add('slider');
+            personalInfo.classList.add('slider');
         }
     }
 

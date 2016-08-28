@@ -4,11 +4,15 @@ body {
 }
 
 .tree {
-    left: calc(50% - 400px);
+    left: calc(50% - 436px);
+    position: absolute;
+    top: 220px;
+    max-height: 400px;
+    transition: left 0.7s linear;
 }
 
 .tree.slider {
-    left: calc(50% - 400px - 192px);
+    left: calc(50% - 436px - 195px);
 }
 
 .node {
@@ -27,8 +31,13 @@ body {
 
 .personal-info {
     position: absolute;
-    right: 425px;
+    right: 25px;
     top: 15px;
+    transition: right 0.7s linear;
+}
+
+.personal-info.slider {
+    right: 425px;
 }
 
 .personal-info a {
@@ -59,13 +68,6 @@ body {
     transition: right 0.7s linear;
 }
 
-svg {
-    position: absolute;
-    top: 220px;
-    left: calc(50% - 634px);
-    max-height: 400px;
-}
-
 #breadcrumbs {
     position: absolute;
     top: 15px;
@@ -91,13 +93,18 @@ svg {
 
 .back-arrow {
     position: absolute;
-    left: calc(50% - 210px);
+    left: calc(50% - 16px);
     top: 114px;
     cursor: pointer;
     text-decoration: none;
     background-image: url('../images/arrow.png');
     width: 33px;
     height: 33px;
+    transition: left 0.7s linear;
+}
+
+.back-arrow.slider {
+    left: calc(50% - 210px);
 }
 
 .hide {
@@ -185,6 +192,7 @@ svg {
     font-family: "Open Sans";
     font-size: 15px;
     font-weight: bold; color: #56575f;
+    overflow-x: hidden;
 }
 
 .user-email {
@@ -207,6 +215,7 @@ svg {
 
 .user-name {
     position: relative;
+    max-width: 200px;
     left: 120px;
     top: -72px;
 }
