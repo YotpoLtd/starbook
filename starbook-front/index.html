@@ -123,7 +123,7 @@
         }
     }
 
-    function populateGraph(treeData) {
+    function populateGraph(treeData, email) {
 
         document.getElementsByClassName('loader')[0].classList.add('hide');
 
@@ -179,7 +179,7 @@
         oldRoot = root;
 
         update(root);
-        updateSideBar(root);
+        updateSideBar(root, email);
 
         d3.select(self.frameElement).style("height", "500px");
 
@@ -317,7 +317,7 @@
             hideChildsOfChilds(d);
             updateBreadcrumbs(d);
             updateRoot(d);
-            updateSideBar(d);
+            updateSideBar(d, email);
         }
 
 
@@ -372,7 +372,7 @@
             return Math.random().toString().slice(2,11);
         }
 
-        function updateSideBar(node) {
+        function updateSideBar(node, email) {
 
             window.globalVar = window.globalVar || {};
             window.globalVar.currentUser = node;
@@ -425,19 +425,21 @@
                 $(span).append(x);
             }
 
-            var minusSkill = $('<span class="remove-skill fa fa-minus"></span>');
-            minusSkill.data('hidden', true);
-            minusSkill.click(function() {
-                if (minusSkill.data('hidden')) {
-                    $('.delete-skill-x').show();
-                    minusSkill.data('hidden', false);
-                } else {
-                    $('.delete-skill-x').hide();
-                    minusSkill.data('hidden', true);
-                }
+            if (email === node.email) {
+                var minusSkill = $('<span class="remove-skill fa fa-minus"></span>');
+                minusSkill.data('hidden', true);
+                minusSkill.click(function () {
+                    if (minusSkill.data('hidden')) {
+                        $('.delete-skill-x').show();
+                        minusSkill.data('hidden', false);
+                    } else {
+                        $('.delete-skill-x').hide();
+                        minusSkill.data('hidden', true);
+                    }
 
-            });
-            $(userSkills).append(minusSkill);
+                });
+                $(userSkills).append(minusSkill);
+            }
 
             var userHobbies = document.getElementsByClassName("user-hobbies")[0];
             userHobbies.textContent = '';
@@ -467,37 +469,46 @@
                 $(span).append(x);
             }
 
-            function updateDetails(data) {
-                $.ajax({
-                    type: "POST",
-                    url: STAR_BOOK_API,
-                    data: JSON.stringify(data),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: 'json',
-                    success: function (data) {
-                        console.log(data);
-                    },
-                    xhrFields: {
-                        withCredentials: SEND_COOKIES
+            if (email === node.email ) {
+                var minusHobby = $('<span class="remove-skill fa fa-minus"></span>');
+                minusHobby.data('hidden', true);
+
+                minusHobby.click(function () {
+                    if (minusHobby.data('hidden')) {
+                        $('.delete-hobby-x').show();
+                        minusHobby.data('hidden', false);
+                    } else {
+                        $('.delete-hobby-x').hide();
+                        minusHobby.data('hidden', true);
+
                     }
                 });
+                $(userHobbies).append(minusHobby);
+
             }
 
-            var minusHobby = $('<span class="remove-skill fa fa-minus"></span>');
-            minusHobby.data('hidden', true);
+            if (email === node.email){
+                $('.add-skill').show();
+            } else {
+                $('.add-skill').hide();
+            }
 
-            minusHobby.click(function() {
-                if (minusHobby.data('hidden')) {
-                    $('.delete-hobby-x').show();
-                    minusHobby.data('hidden', false);
-                } else {
-                    $('.delete-hobby-x').hide();
-                    minusHobby.data('hidden', true);
+        }
 
+        function updateDetails(data) {
+            $.ajax({
+                type: "POST",
+                url: STAR_BOOK_API,
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                },
+                xhrFields: {
+                    withCredentials: SEND_COOKIES
                 }
             });
-            $(userHobbies).append(minusHobby);
-
         }
 
         function showHideArrow() {
@@ -581,7 +592,7 @@
                 hideChildsOfChilds(currNode);
                 updateBreadcrumbs(currNode);
                 updateRoot(currNode);
-                updateSideBar(currNode);
+                updateSideBar(currNode, currNode.email);
             } else {
                 var bc = document.getElementById('breadcrumbs');
                 bc.innerHTML = '';
