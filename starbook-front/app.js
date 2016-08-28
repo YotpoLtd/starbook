@@ -5,27 +5,21 @@ angular.element(document).ready(function() {
         .controller('myCtrl', ['$scope', '$http', 'elastic', '$timeout', function ($scope, $http, elastic, $timeout) {
             $scope.search = '';
 
-            $scope.textChanged = function (text) {
-                if (!!this.search) {
-                    $scope.showTable = true;
-                    if (this.search.length > 1) {
-
-                        var nohash = this.search.replace('#','');
-                        var term = nohash.replace(/ /g,"*") + "*";
-
-                        $scope.names = elastic.get(term, function (data) {
-
-                            var names = [];
-
-                            angular.forEach(data.hits.hits, function(value, key) {
-                                names.push(value._source.name)
-                            });
-                            console.log(names);
-                            $scope.names = names;
+            $scope.textChanged = function () {
+                $scope.showTable = false;
+                if ($scope.search.length > 0) {
+                    // For example if search = ' #abc #adf  sw45   asdfg  '
+                    // It will be replaces with 'abc* adf* sw45* asdfg*'
+                    var term = $scope.search.replace(/\W/g, ' ').trim().split(/\s+/).join('* ') + '*';
+                    elastic.get(term, function (data) {
+                        var names = [];
+                        angular.forEach(data.hits.hits, function(value, key) {
+                            names.push(value._source.name)
                         });
-                    }
-                } else {
-                    $scope.showTable = false;
+                        console.log(names);
+                        $scope.names = names;
+                        $scope.showTable = names.length > 0;
+                    });
                 }
             };
 

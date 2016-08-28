@@ -4,10 +4,12 @@ from oauth2client import client, crypt
 import os
 from redis import StrictRedis
 import json
+from hash_with_lru import HashWithLru
 
 app = Flask(__name__)
 es = Elasticsearch([{"host": os.environ['ELASTIC_HOST'], "port": os.environ['ELASTIC_PORT']}])
 redis = StrictRedis(host=os.environ['REDIS_HOST'], port=os.environ['REDIS_PORT'], db=os.environ['REDIS_DB_NUM'])
+queries_cache = HashWithLru('queries', int(os.environ['QUERIES_CACHE_SIZE']), redis)
 
 PERSON_REQUIRED_KEYS = os.environ['PERSON_REQUIRED_KEYS'].split(',')
 PERSONS_INDEX = os.environ['PERSONS_INDEX']
@@ -23,10 +25,12 @@ APPLICATION_ROOT = os.environ['APPLICATION_ROOT'] or ''
 REDIS_EXPIRY = int(os.environ['REDIS_EXPIRY'])
 
 REDIS_RESPONSE_TREE_KEY = 'response:tree'
+USAGE_COUNTER = 'usage_counter'
 
 
 def clear_cache():
-    redis.delete(REDIS_RESPONSE_TREE_KEY)
+    redis.hset(USAGE_COUNTER, REDIS_RESPONSE_TREE_KEY, 0)
+    queries_cache.clear()
 
 
 def add_person():
@@ -82,20 +86,27 @@ def update_person():
 
 def query():
     query = request.json
+    query_string = query['query']
+    cached = queries_cache.get(query_string)
+    if cached is not None:
+        return jsonify(json.loads(cached.decode()))
     res = es.search(PERSONS_INDEX, PERSONS_TYPE, {
         'size': 1000,
         'query': {
             'simple_query_string': {
-                'query': query['query']
+                'query': query_string
             }
         }
     })
+    queries_cache.set(query_string, json.dumps(res).encode())
     return jsonify(res)
 
 
 def tree():
-    cached = redis.get(REDIS_RESPONSE_TREE_KEY)
-    if cached:
+    redis.hincrby(USAGE_COUNTER, REDIS_RESPONSE_TREE_KEY)
+    tree_usage = int(redis.hget(USAGE_COUNTER, REDIS_RESPONSE_TREE_KEY).decode())
+    if tree_usage > 3:
+        cached = redis.get(REDIS_RESPONSE_TREE_KEY)
         return jsonify(json.loads(cached.decode()))
     res = es.search(PERSONS_INDEX, PERSONS_TYPE, {'size': 1000})
     persons = {}
