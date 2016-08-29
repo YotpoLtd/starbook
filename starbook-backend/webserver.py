@@ -23,6 +23,7 @@ DEBUG = os.environ['DEBUG'].lower() == 'true'
 ORIGIN = os.environ['ORIGIN']
 APPLICATION_ROOT = os.environ['APPLICATION_ROOT'] or ''
 REDIS_EXPIRY = int(os.environ['REDIS_EXPIRY'])
+ADMINS = (os.environ['ADMINS'] or '').split(',')
 
 REDIS_RESPONSE_TREE_KEY = 'response:tree'
 USAGE_COUNTER = 'usage_counter'
@@ -33,7 +34,22 @@ def clear_cache():
     queries_cache.clear()
 
 
+def verify_email_from_request():
+    if DEBUG:
+        return
+    token = request.cookies.get('starbook-token') or (request.json and request.json.pop('starbook-token'))
+    google_email = client.verify_id_token(token, CLIENT_ID)['email']
+    request_email = request.json.get(PERSON_UNIQUE_KEY, None)
+    if request_email is None:
+        return
+    if request_email != google_email and google_email not in ADMINS:
+        return jsonify({'error': 'You are not allowed to do that'}), 403
+
+
 def add_person():
+    not_allow = verify_email_from_request()
+    if not_allow is not None:
+        return not_allow
     person = request.json
     missing_keys = [key for key in PERSON_REQUIRED_KEYS if key not in person]
     if any(missing_keys):
@@ -80,6 +96,9 @@ def update_person_with_json(person):
 
 
 def update_person():
+    not_allow = verify_email_from_request()
+    if not_allow is not None:
+        return not_allow
     person = request.json
     return update_person_with_json(person)
 
@@ -135,7 +154,7 @@ def all_routes():
     if request.method == 'OPTIONS':
         return ''
 
-    action = (request.args and request.args.pop('action', None)) or (request.json and request.json.pop('action', None))
+    action = (request.json and request.json.pop('action', None)) or (request.args and request.args.pop('action', None))
     if not action:
         return '<html><body><h1>Hi there!</h1></body></html>'
 
@@ -166,8 +185,6 @@ def verify_token():
     if DEBUG or request.method == 'OPTIONS':
         return
     token = request.cookies.get('starbook-token') or (request.json and request.json.get('starbook-token'))
-    if request.json:
-        request.json.pop('starbook-token', None)
     if not token:
         return jsonify({'error': 'no token'}), 401
     try:
