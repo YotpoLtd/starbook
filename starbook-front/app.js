@@ -61,11 +61,16 @@ angular.element(document).ready(function() {
                     .cancel('Cancel');
                 $mdDialog.show(confirm).then(function(result) {
                     var email = globalVar.currentUser.email;
-                    var experties = globalVar.currentUser.experties || [];
+                    var expertise = globalVar.currentUser.expertise || [];
                     var additionalExpertises = result.split(',');
-                    updateUserDetails(email, experties, additionalExpertises, 'experties', function () {
+                    updateUserDetails(email, expertise, additionalExpertises, 'expertise', function () {
                         angular.forEach(additionalExpertises, function(value, key) {
-                            angular.element('.user-skills').append('<span class="user-skill">' + value + '<i style="display: none" class="delete-skill-x fa fa-times-circle"></i></span>');
+                            globalVar.currentUser.expertise.push(value);
+                            var skillSpan = angular.element('<span class="user-skill">' + value + '<i style="display: none" class="delete-skill-x fa fa-times-circle"></i></span>');
+                            skillSpan.data('skill-name', value);
+                            skillSpan.data('key', 'expertise');
+                            skillSpan.click(globalVar.deleteSkill);
+                            angular.element('.user-skills').append(skillSpan);
                         });
                     });
                 }, function() {
@@ -86,7 +91,12 @@ angular.element(document).ready(function() {
                     var additionalHobbies = result.split(',');
                     updateUserDetails(email, hobbies, additionalHobbies, 'hobbies', function () {
                         angular.forEach(additionalHobbies, function(value, key) {
-                            angular.element('.user-hobbies').append('<span class="user-skill">' + value + '<i style="display: none" class="delete-hobby-x fa fa-times-circle"></i></span>')
+                            globalVar.currentUser.hobbies.push(value);
+                            var hobbySpan = angular.element('<span class="user-skill">' + value + '<i style="display: none" class="delete-hobby-x fa fa-times-circle"></i></span>');
+                            hobbySpan.data('skill-name', value);
+                            hobbySpan.data('key', 'hobbies');
+                            hobbySpan.click(globalVar.deleteSkill);
+                            angular.element('.user-hobbies').append(hobbySpan);
                         });
                     });
                 }, function() {
