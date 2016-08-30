@@ -31,7 +31,7 @@ class Api:
             })
             id = [i for i in existing['hits']['hits'] if i['_source'][PERSON_UNIQUE_KEY] ==
                   person[PERSON_UNIQUE_KEY]][0]['_id']
-        except RuntimeError:
+        except:
             id = None
         res = es.index(PERSONS_INDEX, PERSONS_TYPE, person, id)
         self.cache.clear_cache()
