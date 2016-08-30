@@ -1,6 +1,6 @@
 angular.module('myApp')
-  .controller('mainCtrl', ['$scope', '$http', 'elastic', 'ENV', '$timeout', '$window', '$cookies',
-    function($scope, $http, elastic, ENV, $timeout, $window, $cookies) {
+  .controller('mainCtrl', ['$scope', '$http', 'api', 'ENV', '$timeout', '$window', '$cookies',
+    function($scope, $http, api, ENV, $timeout, $window, $cookies) {
       var auth2;
       var self = this;
       var starbook_token = 'starbook-token';
@@ -23,8 +23,11 @@ angular.module('myApp')
             $timeout(function() {
               self.auth = auth2.isSignedIn.get();
               if (self.auth) {
-                elastic.tree().success(function(response) {
+                api.tree().success(function(response) {
                   self.email = auth2.currentUser.get().getBasicProfile().getEmail();
+                  api.get_role().success(function(role) {
+                    self.role = role;
+                  });
                   populateGraph(response, self.email);
                 }).error(function() {
                   self.auth = false;
@@ -33,7 +36,7 @@ angular.module('myApp')
             });
           })
         } else {
-          elastic.tree().success(function(response) {
+          api.tree().success(function(response) {
             populateGraph(response);
           })
         }

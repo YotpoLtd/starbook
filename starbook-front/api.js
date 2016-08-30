@@ -1,5 +1,5 @@
 angular.module('myApp')
-  .factory('elastic', ['$http', '$timeout', 'ENV', function($http, $timeout, ENV) {
+  .factory('api', ['$http', '$timeout', 'ENV', function($http, $timeout, ENV) {
     return {
       get: function(query, callback) {
         var config = {
@@ -25,6 +25,10 @@ angular.module('myApp')
       update: function(data) {
         data['action'] = 'update_person';
         return $http.post(ENV.STAR_BOOK_API, data, { withCredentials: ENV.SEND_COOKIES });
+      },
+      get_role: function() {
+        return $http.post(ENV.STAR_BOOK_API, { action: 'get_role' }, { withCredentials: ENV.SEND_COOKIES });
       }
     }
   }]);
+  

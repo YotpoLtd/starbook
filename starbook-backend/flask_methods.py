@@ -2,6 +2,7 @@ import json
 
 from oauth2client import client, crypt
 
+from api import Api
 from env import *
 from flask import request, jsonify, Flask
 
@@ -29,6 +30,8 @@ class FlaskMethods:
                 return api.update_person()
             elif action == 'add_person':
                 return api.add_person()
+            elif action == 'get_role':
+                return Api.get_role()
             else:
                 return '<html><body><h1>Unknown action</h1></body></html>', 404
 
