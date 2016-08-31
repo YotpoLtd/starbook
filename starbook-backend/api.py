@@ -1,6 +1,6 @@
 from env import *
 from flask import request, jsonify
-from verify import verify_email_from_request, verify_admin
+from verify import verify_email_from_request, verify_admin, get_role
 import json
 
 
@@ -87,3 +87,7 @@ class Api:
         res = persons[p]
         self.cache.redis.set(REDIS_RESPONSE_TREE_KEY, json.dumps(res).encode(), ex=REDIS_EXPIRY)
         return jsonify(res)
+
+    @staticmethod
+    def get_role():
+        return get_role()

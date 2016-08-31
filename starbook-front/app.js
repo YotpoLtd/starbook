@@ -2,7 +2,7 @@ angular.module('myApp', ['ngCookies','ngMaterial', 'ngMessages', 'material.svgAs
 angular.element(document).ready(function() {
 
     angular.module('myApp')
-        .controller('myCtrl', ['$scope', '$http', 'elastic', '$timeout', '$mdDialog', function ($scope, $http, elastic, $timeout, $mdDialog) {
+        .controller('myCtrl', ['$scope', '$http', 'api', '$timeout', '$mdDialog', function ($scope, $http, api, $timeout, $mdDialog) {
             $scope.search = '';
 
             $scope.textChanged = function () {
@@ -11,7 +11,7 @@ angular.element(document).ready(function() {
                     // For example if search = ' #abc #adf  sw45   asdfg  '
                     // It will be replaces with 'abc* adf* sw45* asdfg*'
                     var term = $scope.search.replace(/\W/g, ' ').trim().split(/\s+/).join('* ') + '*';
-                    elastic.get(term, function (data) {
+                    api.get(term, function (data) {
                         var names = [];
                         angular.forEach(data.hits.hits, function(value, key) {
                             names.push(value._source.name)
@@ -42,7 +42,7 @@ angular.element(document).ready(function() {
                 var data = { email: email}
                 data[key] = currentList;
 
-                elastic.update(data).success(function (response) {
+                api.update(data).success(function (response) {
                     console.log(response);
                     if (callback){
                         callback();

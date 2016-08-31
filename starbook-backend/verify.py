@@ -22,3 +22,11 @@ def verify_admin():
     google_email = client.verify_id_token(token, CLIENT_ID)['email']
     if google_email not in ADMINS:
         return jsonify({'error': 'You are not allowed to do that'}), 403
+
+
+def get_role():
+    if DEBUG:
+        return jsonify({'admin': True})
+    token = request.cookies.get('starbook-token') or (request.json and request.json.pop('starbook-token'))
+    google_email = client.verify_id_token(token, CLIENT_ID)['email']
+    return jsonify({'admin': google_email in ADMINS})
