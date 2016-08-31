@@ -398,29 +398,15 @@
             var userSkills = document.getElementsByClassName("user-skills")[0];
             userSkills.textContent = '';
 
-            for (var i = 0; node.experties && i < node.experties.length; i++) {
+            for (var i = 0; node.expertise && i < node.expertise.length; i++) {
                 var span = document.createElement('span');
-                span.textContent = node.experties[i];
+                span.textContent = node.expertise[i];
                 span.className = "user-skill";
                 userSkills.appendChild(span);
                 var x = $('<i class="delete-skill-x fa fa-times-circle"></i>');
-                x.data('skill-name', node.experties[i]);
-                x.click(function () {
-                    var skill = $(this).data('skill-name');
-                    var experties = globalVar.currentUser.experties;
-                    var index = experties.indexOf(skill);
-                    if (index > -1) {
-                        experties.splice(index, 1);
-                    }
-                    var data = {action : 'update_person'};
-                    data.experties = experties;
-                    data.email = globalVar.currentUser.email;
-
-                    $(this).closest('.user-skill').remove();
-
-                    updateDetails(data);
-
-                });
+                x.data('skill-name', node.expertise[i]);
+                x.data('key', 'expertise');
+                x.click(globalVar.deleteSkill);
                 x.hide();
                 $(span).append(x);
             }
@@ -451,21 +437,8 @@
                 var x = $('<i class="delete-hobby-x fa fa-times-circle"></i>');
                 x.hide();
                 x.data('hobby-name', node.hobbies[i]);
-                x.click(function () {
-                    var hobby = $(this).data('hobby-name');
-                    var hobbies = globalVar.currentUser.hobbies;
-                    var index = hobbies.indexOf(hobby);
-                    if (index > -1) {
-                        hobbies.splice(index, 1);
-                    }
-                    var data = {action : 'update_person'};
-                    data.hobbies = hobbies;
-                    data.email = globalVar.currentUser.email;
-
-                    $(this).closest('.user-skill').remove();
-
-                    updateDetails(data)
-                });
+                x.data('key', 'hobbies');
+                x.click(globalVar.deleteSkill);
                 $(span).append(x);
             }
 
@@ -569,6 +542,24 @@
         }
 
         globalVar = globalVar || {};
+
+        globalVar.deleteSkill = function() {
+            var key = $(this).data('key');
+            var skill = $(this).data('skill-name');
+            var currentSkills = globalVar.currentUser[key];
+            var index = currentSkills.indexOf(skill);
+            if (index > -1) {
+                currentSkills.splice(index, 1);
+            }
+            var data = {action : 'update_person'};
+            data[key] = currentSkills;
+            data.email = globalVar.currentUser.email;
+
+            $(this).closest('.user-skill').remove();
+
+            updateDetails(data);
+
+        }
 
         globalVar.prevArrow = function() {
             var bc = document.getElementById('breadcrumbs');
