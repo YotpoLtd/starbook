@@ -49,3 +49,13 @@ services:
       - elasticsearch
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
+
+  logstash:
+    image: logstash
+    build: logstash
+    links:
+      - elasticsearch
+    volumes:
+      - ./logstash:/config-dir
+    ports:
+      - 5678:5678

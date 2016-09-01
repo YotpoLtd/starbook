@@ -1,2 +1,2 @@
 FROM python:3-onbuild
-CMD python webserver.py
+CMD python -u webserver.py

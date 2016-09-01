@@ -1,10 +1,9 @@
 import json
-
 from oauth2client import client, crypt
-
 from api import Api
 from env import *
 from flask import request, jsonify, Flask
+from logger import log
 
 
 class FlaskMethods:
@@ -32,6 +31,8 @@ class FlaskMethods:
                 return api.add_person()
             elif action == 'get_role':
                 return Api.get_role()
+            elif action == 'remove_person':
+                return api.remove_person()
             else:
                 return '<html><body><h1>Unknown action</h1></body></html>', 404
 
@@ -43,6 +44,14 @@ class FlaskMethods:
             response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
             response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
             return response
+
+        @app.errorhandler(500)
+        def internal_server_error(error):
+            try:
+                log({'error': repr(error)})
+            except:
+                print('failed to log error')
+            return 'internal server error', 500
 
         @app.before_request
         def verify_token():
@@ -63,6 +72,8 @@ class FlaskMethods:
             except crypt.AppIdentityError as e:
                 # Invalid token
                 return jsonify({'error': 'Invalid token'}), 401
+
+            log({'idinfo': idinfo, 'req': request.json, 'args': request.args})
 
             outdated = False
             google_id_redis_key = 'google_id:{}'.format(idinfo['sub'])
