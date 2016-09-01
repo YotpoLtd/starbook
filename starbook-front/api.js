@@ -28,6 +28,12 @@ angular.module('myApp')
       },
       get_role: function() {
         return $http.post(ENV.STAR_BOOK_API, { action: 'get_role' }, { withCredentials: ENV.SEND_COOKIES });
+      },
+      remove_person: function(email) {
+        return $http.post(ENV.STAR_BOOK_API, {
+          action: 'remove_person',
+          email: email
+        }, { withCredentials: ENV.SEND_COOKIES });
       }
     }
   }]);

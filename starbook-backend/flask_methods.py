@@ -31,6 +31,8 @@ class FlaskMethods:
                 return api.add_person()
             elif action == 'get_role':
                 return Api.get_role()
+            elif action == 'remove_person':
+                return api.remove_person()
             else:
                 return '<html><body><h1>Unknown action</h1></body></html>', 404
 

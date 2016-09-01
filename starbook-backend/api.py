@@ -37,6 +37,51 @@ class Api:
         self.cache.clear_cache()
         return jsonify({'created': res['created']})
 
+    def remove_person(self):
+        es = self.utils.es
+        not_allow = verify_admin()
+        if not_allow is not None:
+            return not_allow
+        person = request.json
+        try:
+            existing = es.search(PERSONS_INDEX, PERSONS_TYPE, {
+                'query': {
+                    'match': {
+                        PERSON_UNIQUE_KEY: {
+                            'query': person[PERSON_UNIQUE_KEY],
+                            'type': 'phrase'
+                        }
+                    }
+                }
+            })
+            found = [i for i in existing['hits']['hits'] if i['_source'][PERSON_UNIQUE_KEY] ==
+                  person[PERSON_UNIQUE_KEY]][0]
+        except:
+            return jsonify({'status': 'Not found'}), 404
+
+        boss = found['_source'].get('boss', None)
+        if not boss:
+            return jsonify({'status': 'Cannot remove root'}), 400
+
+        children = es.search(PERSONS_INDEX, PERSONS_TYPE, {
+                'size': 1000,
+                'query': {
+                    'match': {
+                        'boss': {
+                            'query': person[PERSON_UNIQUE_KEY],
+                            'type': 'phrase'
+                        }
+                    }
+                }
+            })['hits']['hits']
+
+        for child in children:
+            self.utils.update_person_with_json({PERSON_UNIQUE_KEY: child['_source'][PERSON_UNIQUE_KEY],
+                                                'boss': boss})
+        es.delete(PERSONS_INDEX, PERSONS_TYPE, found['_id'])
+        self.cache.clear_cache()
+        return jsonify({'found': found, 'children': children})
+
     def update_person(self):
         not_allow = verify_email_from_request()
         if not_allow is not None:

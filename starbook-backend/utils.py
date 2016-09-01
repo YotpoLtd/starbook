@@ -23,7 +23,7 @@ class Utils:
             })
             found = \
                 [i for i in existing['hits']['hits'] if i['_source'][PERSON_UNIQUE_KEY] == person[PERSON_UNIQUE_KEY]][0]
-        except RuntimeError:
+        except:
             return jsonify({'status': 'Not found'}), 404
         found['_source'].update(person)
         self.es.index(PERSONS_INDEX, PERSONS_TYPE, found['_source'], found['_id'])
