@@ -23,12 +23,14 @@ angular.module('myApp')
             $timeout(function() {
               self.auth = auth2.isSignedIn.get();
               if (self.auth) {
+                window.globalVar = window.globalVar || {};
+                window.globalVar.looged_user_email = auth2.currentUser.get().getBasicProfile().getEmail()
                 api.tree().success(function(response) {
                   self.email = auth2.currentUser.get().getBasicProfile().getEmail();
                   api.get_role().success(function(role) {
                     self.role = role;
                   });
-                  populateGraph(response, self.email);
+                  populateGraph(response);
                 }).error(function() {
                   self.auth = false;
                 });

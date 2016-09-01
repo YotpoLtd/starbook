@@ -25,7 +25,7 @@
 
     <meta charset="utf-8">
 
-    <title>StarBook</title>
+    <title>Hive</title>
 
     <link rel="stylesheet" type="text/css" href="assets/stylesheet.css">
 
@@ -58,15 +58,15 @@
             <div class="user-name">Star Book</div>
             <div class="user-title">Magician</div>
             <hr class="seperator"/>
-            <div class="user-email">starbook@yotpo.com</div>
+            <div class="user-email">hive@yotpo.com</div>
             <img src="images/email.png">
-            <div class="user-phone">1800-STARBOOK</div>
+            <div class="user-phone">1800-YOTPO-HIVE</div>
             <img src="images/Phone_icon.png">
-            <a href="https://yotpo.slack.com/messages/" target="_blank">
+            <!--a href="https://yotpo.slack.com/messages/" target="_blank">
                 <div class="user-slack">Open a slack chat</div>
                 <img src="images/slack.png">
-            </a>
-            <hr class="seperator"/>
+            </a-->
+            <hr class="seperator" style="margin-top: 25px;"/>
             <div class="skills">Professional Skills<span class="add-skill fa fa-plus" ng-click="addSkill()"></span></div>
             <div class="user-skills">
                 <span class="user-skill">talking</span>
@@ -179,7 +179,7 @@
         oldRoot = root;
 
         update(root);
-        updateSideBar(root, email);
+        updateSideBar(root);
 
         d3.select(self.frameElement).style("height", "500px");
 
@@ -317,7 +317,7 @@
             hideChildsOfChilds(d);
             updateBreadcrumbs(d);
             updateRoot(d);
-            updateSideBar(d, email);
+            updateSideBar(d);
         }
 
 
@@ -372,7 +372,7 @@
             return Math.random().toString().slice(2,11);
         }
 
-        function updateSideBar(node, email) {
+        function updateSideBar(node) {
 
             window.globalVar = window.globalVar || {};
             window.globalVar.currentUser = node;
@@ -411,7 +411,7 @@
                 $(span).append(x);
             }
 
-            if (email === node.email) {
+            if (globalVar.looged_user_email === node.email) {
                 var minusSkill = $('<span class="remove-skill fa fa-minus"></span>');
                 minusSkill.data('hidden', true);
                 minusSkill.click(function () {
@@ -436,13 +436,13 @@
                 userHobbies.appendChild(span);
                 var x = $('<i class="delete-hobby-x fa fa-times-circle"></i>');
                 x.hide();
-                x.data('hobby-name', node.hobbies[i]);
+                x.data('skill-name', node.hobbies[i]);
                 x.data('key', 'hobbies');
                 x.click(globalVar.deleteSkill);
                 $(span).append(x);
             }
 
-            if (email === node.email ) {
+            if (globalVar.looged_user_email === node.email ) {
                 var minusHobby = $('<span class="remove-skill fa fa-minus"></span>');
                 minusHobby.data('hidden', true);
 
@@ -460,7 +460,7 @@
 
             }
 
-            if (email === node.email){
+            if (globalVar.looged_user_email === node.email){
                 $('.add-skill').show();
             } else {
                 $('.add-skill').hide();
@@ -583,7 +583,7 @@
                 hideChildsOfChilds(currNode);
                 updateBreadcrumbs(currNode);
                 updateRoot(currNode);
-                updateSideBar(currNode, currNode.email);
+                updateSideBar(currNode);
             } else {
                 var bc = document.getElementById('breadcrumbs');
                 bc.innerHTML = '';

@@ -16,7 +16,6 @@ angular.element(document).ready(function() {
                         angular.forEach(data.hits.hits, function(value, key) {
                             names.push(value._source.name)
                         });
-                        console.log(names);
                         $scope.names = names;
                         $scope.showTable = names.length > 0;
                     });
@@ -43,7 +42,6 @@ angular.element(document).ready(function() {
                 data[key] = currentList;
 
                 api.update(data).success(function (response) {
-                    console.log(response);
                     if (callback){
                         callback();
                     }
