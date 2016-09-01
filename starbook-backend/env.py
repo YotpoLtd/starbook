@@ -14,6 +14,8 @@ APPLICATION_ROOT = os.environ['APPLICATION_ROOT'] or ''
 REDIS_EXPIRY = int(os.environ['REDIS_EXPIRY'])
 ADMINS = (os.environ['ADMINS'] or '').split(',')
 QUERIES_CACHE_SIZE = int(os.environ['QUERIES_CACHE_SIZE'])
+LOGSTASH_HOST = os.getenv('LOGSTASH_HOST', None)
+LOGSTASH_PORT = int(os.getenv('LOGSTASH_PORT', 0))
 
 REDIS_RESPONSE_TREE_KEY = 'response:tree'
 USAGE_COUNTER = 'usage_counter'
