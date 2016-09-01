@@ -21,6 +21,10 @@ services:
     image: elasticsearch:2.3
     ports:
       - "9200:9200"
+    volumes:
+      - ./elasticsearch/config:/usr/share/elasticsearch/config
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
+      - ./elastic/plugins:/usr/share/elasticsearch/plugins
 
   slackbot:
     build: slackbot
