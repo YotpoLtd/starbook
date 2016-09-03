@@ -25,7 +25,7 @@
 
     <meta charset="utf-8">
 
-    <title>Hive</title>
+    <title>Yotpo Hive</title>
 
     <link rel="stylesheet" type="text/css" href="assets/stylesheet.css">
 
@@ -55,7 +55,7 @@
 
         <div class="user-details-wrapper">
             <img class="user-image" src="images/1.png" width="90">
-            <div class="user-name">Star Book</div>
+            <div class="user-name">Yotpo Hive</div>
             <div class="user-title">Magician</div>
             <hr class="seperator"/>
             <div class="user-email">hive@yotpo.com</div>
@@ -84,6 +84,10 @@
             </div>
 
         </div>
+
+        <md-button class="md-warn delete-user-button" ng-show="isAdmin()" ng-cloak ng-click="showConfirm($event)" >
+            Delete
+        </md-button>
 
         <table cellpadding="5" cellspacing="0" border="1" class="user-table" ng-show="showTable">
             <tr ng-repeat="name in names">
