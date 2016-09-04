@@ -2,7 +2,8 @@ angular.module('myApp', ['ngCookies','ngMaterial', 'ngMessages', 'material.svgAs
 angular.element(document).ready(function() {
 
     angular.module('myApp')
-        .controller('myCtrl', ['$scope', '$http', 'api', '$timeout', '$mdDialog', function ($scope, $http, api, $timeout, $mdDialog) {
+        .controller('myCtrl', ['$scope', '$http', 'api', '$timeout', '$mdDialog',
+          function ($scope, $http, api, $timeout, $mdDialog) {
             $scope.search = '';
 
             $scope.textChanged = function () {
@@ -32,16 +33,19 @@ angular.element(document).ready(function() {
                 globalVar.updateBy({name: name});
             };
 
+              function normalizeListOfStrings(listOfStrings) {
+                  return $.map(listOfStrings, function(str){
+                      return str.replace ? str.replace(/\s+/g, ' ').trim() : undefined;
+                  })
+              }
+
             function updateUserDetails(email, currentList, additionList, key, callback) {
                 currentList = additionList.concat(currentList);
-                currentList = $.map(currentList, function(name){
-                    return name.replace ? name.replace(/\s/g, '') : undefined;
-                });
 
-                var data = { email: email}
+                var data = { email: email };
                 data[key] = currentList;
 
-                api.update(data).success(function (response) {
+                api.update(data).success(function () {
                     if (callback){
                         callback();
                     }
@@ -59,9 +63,9 @@ angular.element(document).ready(function() {
                     .cancel('Cancel');
                 $mdDialog.show(confirm).then(function(result) {
                     var email = globalVar.currentUser.email;
-                    var expertise = globalVar.currentUser.expertise || [];
-                    var additionalExpertises = result.split(',');
-                    updateUserDetails(email, expertise, additionalExpertises, 'expertise', function () {
+                    globalVar.currentUser.expertise = globalVar.currentUser.expertise || [];
+                    var additionalExpertises = normalizeListOfStrings(result.split(','));
+                    updateUserDetails(email, globalVar.currentUser.expertise, additionalExpertises, 'expertise', function () {
                         angular.forEach(additionalExpertises, function(value, key) {
                             globalVar.currentUser.expertise.push(value);
                             var skillSpan = angular.element('<span class="user-skill">' + value + '<i style="display: none" class="delete-skill-x fa fa-times-circle"></i></span>');
@@ -85,9 +89,9 @@ angular.element(document).ready(function() {
                     .cancel('Cancel');
                 $mdDialog.show(confirm).then(function(result) {
                     var email = globalVar.currentUser.email;
-                    var hobbies = globalVar.currentUser.hobbies || [];
-                    var additionalHobbies = result.split(',');
-                    updateUserDetails(email, hobbies, additionalHobbies, 'hobbies', function () {
+                    globalVar.currentUser.hobbies = globalVar.currentUser.hobbies || [];
+                    var additionalHobbies = normalizeListOfStrings(result.split(','));
+                    updateUserDetails(email, globalVar.currentUser.hobbies, additionalHobbies, 'hobbies', function () {
                         angular.forEach(additionalHobbies, function(value, key) {
                             globalVar.currentUser.hobbies.push(value);
                             var hobbySpan = angular.element('<span class="user-skill">' + value + '<i style="display: none" class="delete-hobby-x fa fa-times-circle"></i></span>');
