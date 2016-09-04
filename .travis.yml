@@ -20,8 +20,7 @@ script:
 
   - docker images | grep hive
 
-after_success:
-  - docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/hive-front:"$TRAVIS_COMMIT"
-  - docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/hive-back:"$TRAVIS_COMMIT"
-  - docker push registry.yotpo.com/starbook-front:"$TRAVIS_COMMIT"
-  - docker push registry.yotpo.com/starbook-backend:"$TRAVIS_COMMIT"
+  - # docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/hive-front:"$TRAVIS_COMMIT"
+  - # docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/hive-back:"$TRAVIS_COMMIT"
+  - docker push registry.yotpo.com/hive-front:"$TRAVIS_COMMIT"
+  - docker push registry.yotpo.com/hive-back:"$TRAVIS_COMMIT"
