@@ -24,7 +24,9 @@ angular.module('myApp')
               self.auth = auth2.isSignedIn.get();
               if (self.auth) {
                 window.globalVar = window.globalVar || {};
-                window.globalVar.looged_user_email = auth2.currentUser.get().getBasicProfile().getEmail()
+                var basicProfile = auth2.currentUser.get().getBasicProfile();
+                window.globalVar.looged_user_email = basicProfile.getEmail();
+                window.globalVar.logged_image = basicProfile.getImageUrl();
                 api.tree().success(function(response) {
                   self.email = auth2.currentUser.get().getBasicProfile().getEmail();
                   api.get_role().success(function(role) {
