@@ -155,7 +155,7 @@
 
         function getImage(node) {
             return node['image'] ||
-                    (globalVar.looged_user_email === node.email && window.globalVar.logged_image) ||
+                    ((globalVar.looged_user_email === node.email) && window.globalVar.logged_image) ||
                     ('images/' + (++imageIndex % 30 + 1) + '.png');
         }
 
