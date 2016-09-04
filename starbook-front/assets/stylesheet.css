@@ -214,6 +214,18 @@ body {
     border: #efefef 1px solid;
 }
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+.delete-user-button {
+    display: table;
+    margin: 0 auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 .yo-logo {
     width: 40px;
     margin-top: 13px;

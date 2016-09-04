@@ -103,6 +103,32 @@ angular.element(document).ready(function() {
             };
 
             $scope.showTable = false;
+            
+            $scope.isAdmin = function () {
+                return this.$parent.mainCtrl.role ? this.$parent.mainCtrl.role.admin : false;
+            }
+
+            $scope.showConfirm = function(ev) {
+                var confirm = $mdDialog.confirm()
+                    .title('Delete ' + globalVar.currentUser.name + '. Are you sure?')
+                    .textContent('User details cannot be restored after deletion.')
+                    .targetEvent(ev)
+                    .ok('Yes')
+                    .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                    removePerson();
+                }, function() {
+                    // user deletion cancelled
+                });
+            };
+
+            function removePerson() {
+                var email_to_remove = globalVar.currentUser.email;
+                api.remove_person(email_to_remove, function (data) {
+                    console.log(data);
+                });
+                location.reload();
+            }
 
         }])
         .config(function ($httpProvider) {
