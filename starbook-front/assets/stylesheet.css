@@ -159,6 +159,13 @@ body {
     max-width: 210px;
 }
 
+.edit-user-title {
+    position: relative;
+    top: -83px;
+    left: 100px;
+    cursor: pointer;
+}
+
 .skills {
     padding-bottom: 11px;
     position: relative;
@@ -250,6 +257,10 @@ body {
     position: relative;
     top: 26px;
     left: 46px;
+}
+
+.user-phone.clickable {
+    cursor: pointer;
 }
 
 .home {
