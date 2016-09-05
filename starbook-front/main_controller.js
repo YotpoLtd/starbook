@@ -1,6 +1,6 @@
 angular.module('myApp')
-  .controller('mainCtrl', ['$scope', '$http', 'api', 'ENV', '$timeout', '$window', '$cookies',
-    function($scope, $http, api, ENV, $timeout, $window, $cookies) {
+  .controller('mainCtrl', ['$scope', '$http', 'api', 'ENV', '$timeout', '$window', '$cookies', '$mdDialog',
+    function($scope, $http, api, ENV, $timeout, $window, $cookies, $mdDialog) {
       var auth2;
       var self = this;
       var starbook_token = 'starbook-token';
@@ -73,6 +73,27 @@ angular.module('myApp')
         if (self.email) {
           globalVar.updateBy({email: self.email});
         }
-      }
+      };
+
+      self.editTitle = function () {
+        var newTitle;
+        var confirm = $mdDialog.prompt()
+          .title('Edit Title')
+          .initialValue(window.globalVar.currentUser.title)
+          .placeholder('Title')
+          .ok('Submit')
+          .cancel('Cancel');
+        $mdDialog.show(confirm).then(function(result) {
+          var email = window.globalVar.currentUser.email;
+          newTitle = result;
+          return api.update({email: email, title: result});
+        }).then(function() {
+          window.globalVar.currentUser.title = newTitle;
+          var userTitle = document.getElementsByClassName("user-title")[0];
+          userTitle.textContent = newTitle;
+        }, function() {
+          // user canceled
+        });
+      };
 
     }]);

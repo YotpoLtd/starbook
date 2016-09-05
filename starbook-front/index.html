@@ -57,6 +57,10 @@
             <img class="user-image" src="images/1.png" width="90">
             <div class="user-name">Yotpo Hive</div>
             <div class="user-title">Magician</div>
+            <i ng-if="mainCtrl.role.admin"
+               ng-click="mainCtrl.editTitle()"
+               class="fa fa-pencil-square-o edit-user-title"
+               aria-hidden="true"></i>
             <hr class="seperator"/>
             <div class="user-email">hive@yotpo.com</div>
             <img src="images/email.png">
@@ -155,7 +159,7 @@
 
         function getImage(node) {
             return node['image'] ||
-                    ((globalVar.looged_user_email === node.email) && window.globalVar.logged_image) ||
+                    ((window.globalVar && window.globalVar.looged_user_email === node.email) && window.globalVar.logged_image) ||
                     ('images/' + (++imageIndex % 30 + 1) + '.png');
         }
 
