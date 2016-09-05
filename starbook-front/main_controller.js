@@ -96,4 +96,28 @@ angular.module('myApp')
         });
       };
 
+      self.editPhone = function() {
+        if (globalVar.currentUser.email !== globalVar.looged_user_email) {
+          return;
+        }
+        var newPhone;
+        var confirm = $mdDialog.prompt()
+          .title('Edit Phone')
+          .initialValue(window.globalVar.currentUser.phone)
+          .placeholder('Phone')
+          .ok('Submit')
+          .cancel('Cancel');
+        $mdDialog.show(confirm).then(function(result) {
+          var email = window.globalVar.currentUser.email;
+          newPhone = result;
+          return api.update({email: email, phone: result});
+        }).then(function() {
+          window.globalVar.currentUser.phone = newPhone;
+          var userPhone = document.getElementsByClassName("user-phone")[0];
+          userPhone.textContent = newPhone;
+        }, function() {
+          // user canceled
+        });
+      }
+
     }]);

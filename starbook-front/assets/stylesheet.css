@@ -259,6 +259,10 @@ body {
     left: 46px;
 }
 
+.user-phone.clickable {
+    cursor: pointer;
+}
+
 .home {
     width: 24px;
     margin-bottom: 7px;
