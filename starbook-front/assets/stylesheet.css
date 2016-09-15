@@ -147,6 +147,19 @@ body {
     background-color: white;
 }
 
+.user-table em {
+    font-style: normal;
+    font-weight: bold;
+}
+
+.user-table .query-highlight {
+    font-size: 12px;
+}
+
+.user-table .person-image {
+    max-width: 50px;
+}
+
 .user-image {
     border-radius: 50%;
 }

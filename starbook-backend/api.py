@@ -55,7 +55,7 @@ class Api:
                 }
             })
             found = [i for i in existing['hits']['hits'] if i['_source'][PERSON_UNIQUE_KEY] ==
-                  person[PERSON_UNIQUE_KEY]][0]
+                     person[PERSON_UNIQUE_KEY]][0]
         except:
             return jsonify({'status': 'Not found'}), 404
 
@@ -64,16 +64,16 @@ class Api:
             return jsonify({'status': 'Cannot remove root'}), 400
 
         children = es.search(PERSONS_INDEX, PERSONS_TYPE, {
-                'size': 1000,
-                'query': {
-                    'match': {
-                        'boss': {
-                            'query': person[PERSON_UNIQUE_KEY],
-                            'type': 'phrase'
-                        }
+            'size': 1000,
+            'query': {
+                'match': {
+                    'boss': {
+                        'query': person[PERSON_UNIQUE_KEY],
+                        'type': 'phrase'
                     }
                 }
-            })['hits']['hits']
+            }
+        })['hits']['hits']
 
         for child in children:
             self.utils.update_person_with_json({PERSON_UNIQUE_KEY: child['_source'][PERSON_UNIQUE_KEY],
@@ -95,14 +95,25 @@ class Api:
         cached = self.cache.queries_cache.get(query_string)
         if cached is not None:
             return jsonify(json.loads(cached.decode()))
-        res = self.utils.es.search(PERSONS_INDEX, PERSONS_TYPE, {
+        elastic_query = {
             'size': 1000,
             'query': {
                 'simple_query_string': {
                     'query': query_string
-                }
-            }
-        })
+                }},
+            'highlight': {
+                'fields': {
+                    '*': {}
+                },
+                'require_field_match': False
+            }}
+
+        fields = query.get('fields')
+        if fields:
+            elastic_query['query']['simple_query_string']['fields'] = fields
+            elastic_query['highlight']['require_field_match'] = True
+
+        res = self.utils.es.search(PERSONS_INDEX, PERSONS_TYPE, elastic_query)
         self.cache.queries_cache.set(query_string, json.dumps(res).encode())
         return jsonify(res)
 

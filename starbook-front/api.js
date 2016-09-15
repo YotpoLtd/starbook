@@ -10,7 +10,11 @@ angular.module('myApp')
         };
 
         $timeout(function() {
-          $http.post(ENV.STAR_BOOK_API, { action: 'query', query: query }, config)
+          $http.post(ENV.STAR_BOOK_API, {
+            action: 'query',
+            query: query,
+            fields: ['boss', 'phone', 'title', 'hobbies', 'hood', 'name', 'expertise', 'email']
+          }, config)
             .success(function(data, status, headers, config) {
               callback(data);
             })
