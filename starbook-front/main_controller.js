@@ -71,7 +71,7 @@ angular.module('myApp')
 
       self.meClicked = function() {
         if (self.email) {
-          globalVar.updateBy({email: self.email});
+          globalVar.updateBy({ email: self.email });
         }
       };
 
@@ -92,7 +92,7 @@ angular.module('myApp')
         })
       };
 
-      self.editTitle = function () {
+      self.editTitle = function() {
         var newTitle;
         var confirm = $mdDialog.prompt()
           .title('Edit Title')
@@ -103,7 +103,7 @@ angular.module('myApp')
         $mdDialog.show(confirm).then(function(result) {
           var email = window.globalVar.currentUser.email;
           newTitle = result;
-          return api.update({email: email, title: result});
+          return api.update({ email: email, title: result });
         }).then(function() {
           window.globalVar.currentUser.title = newTitle;
           var userTitle = document.getElementsByClassName("user-title")[0];
@@ -127,7 +127,7 @@ angular.module('myApp')
         $mdDialog.show(confirm).then(function(result) {
           var email = window.globalVar.currentUser.email;
           newPhone = result;
-          return api.update({email: email, phone: result});
+          return api.update({ email: email, phone: result });
         }).then(function() {
           window.globalVar.currentUser.phone = newPhone;
           var userPhone = document.getElementsByClassName("user-phone")[0];

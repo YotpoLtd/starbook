@@ -144,6 +144,14 @@ class Api:
         self.cache.redis.set(REDIS_RESPONSE_TREE_KEY, json.dumps(res).encode(), ex=REDIS_EXPIRY)
         return jsonify(res)
 
+    def get_all(self):
+        res = self.utils.es.search(PERSONS_INDEX, PERSONS_TYPE, {
+            '_source': request.json.get('fields') or '*',
+            'from': request.json.get('from') or 0,
+            'size': request.json.get('size') or 0
+        })
+        return jsonify(res)
+
     @staticmethod
     def get_role():
         return get_role()
