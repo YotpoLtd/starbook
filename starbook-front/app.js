@@ -40,7 +40,8 @@ angular.element(document).ready(function() {
           }, 500);
         };
 
-        self.personClicked = function(name) {
+        self.personClicked = function(person) {
+          var name = person._source.name;
           globalVar.updateBy({ name: name });
         };
 
