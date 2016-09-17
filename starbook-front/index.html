@@ -47,7 +47,7 @@
 
 <div class="side-bar">
     <img src="images/open.png" class="open-side-bar" onclick="toggleSideBar()"/>
-    <div ng-controller="myCtrl">
+    <div ng-controller="myCtrl as ctrl">
 
         <div class="search-bar-container">
             <input type="text" ng-model="search" ng-model-options="{ debounce: 200 }" placeholder="Search" class="search-bar" ng-change="textChanged()" ng-blur="onLeaveSearch()"/>
@@ -93,9 +93,21 @@
             Delete
         </md-button>
 
-        <table cellpadding="5" cellspacing="0" border="1" class="user-table" ng-show="showTable">
-            <tr ng-repeat="name in names">
-                <td class="table-row" ng-click="nameClicked(name)">{{name}}</td>
+        <table cellpadding="5" cellspacing="0" border="1" class="user-table" ng-show="ctrl.showTable">
+            <tr ng-repeat="person in ctrl.people track by person._id">
+                <td class="table-row" ng-click="ctrl.personClicked(person)">
+                    <div class="person-info">
+                        <div class="person-name" ng-bind-html="person.name"></div>
+                        <div ng-repeat="highlight in person.highlights track by highlight.key" class="query-highlight">
+                            <span class="highlight-key" ng-bind="highlight.key"></span>:
+                            <span class="highlight-value" ng-bind-html="highlight.value"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <img ng-if="person._source.image" ng-src="{{person._source.image}}" class="person-image"/>
+                    </div>
+
+                </td>
             </tr>
         </table>
     </div>

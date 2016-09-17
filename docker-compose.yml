@@ -22,12 +22,12 @@ services:
     ports:
       - "9200:9200"
 
-  slackbot:
-    build: slackbot
-    links:
-      - starbook-backend
-    env_file:
-      - slackbot/slackbot-example.env
+  # slackbot:
+  #   build: slackbot
+  #   links:
+  #     - starbook-backend
+  #   env_file:
+  #     - slackbot/slackbot-example.env
 
   starbook-front:
     build: starbook-front
