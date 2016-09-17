@@ -38,6 +38,17 @@ angular.module('myApp')
           action: 'remove_person',
           email: email
         }, { withCredentials: ENV.SEND_COOKIES });
+      },
+      add_person: function(fields) {
+        return $http.post(ENV.STAR_BOOK_API, {
+          action: 'add_person',
+          email: fields.email,
+          name: fields.name,
+          boss: fields.boss,
+          title: fields.title,
+          hood: fields.hood,
+          phone: fields.phone
+        }, { withCredentials: ENV.SEND_COOKIES })
       }
     }
   }]);
