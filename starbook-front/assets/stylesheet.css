@@ -362,3 +362,12 @@ body {
 .modal .sign-in {
     width: 200px;
 }
+
+.add-person-dialog{
+    width: 100%;
+    padding: 35px;
+}
+
+.add-person-title {
+    text-align: center;
+}

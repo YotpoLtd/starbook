@@ -76,6 +76,7 @@ angular.module('myApp')
       };
 
       self.addPerson = function(ev) {
+        closeSideBar();
         $mdDialog.show({
           controller: 'AddPersonController',
           controllerAs: 'ctrl',

@@ -124,6 +124,22 @@
 <div class="modal-backdrop" ng-class="{'in': !mainCtrl.auth}"></div>
 
 <script>
+
+    function closeSideBar() {
+        var sideBar = document.getElementsByClassName("side-bar")[0];
+        if (!sideBar.classList.contains('sider')) {
+            sideBar.classList.add('sider');
+        }
+        var tree = document.getElementsByClassName("tree")[0];
+        var backArrow = document.getElementsByClassName("back-arrow")[0];
+        var personalInfo = document.getElementsByClassName("personal-info")[0];
+        if (tree.classList.contains('slider')) {
+            tree.classList.remove('slider');
+            backArrow.classList.remove('slider');
+            personalInfo.classList.remove('slider');
+        }
+    }
+
     function toggleSideBar() {
         var sideBar = document.getElementsByClassName("side-bar")[0];
         if (sideBar.classList.contains('sider')) {

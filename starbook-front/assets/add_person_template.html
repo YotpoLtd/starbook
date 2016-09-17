@@ -1,5 +1,6 @@
-<md-dialog aria-label="Add Person">
+<md-dialog aria-label="Add Person" class="add-person-dialog">
     <md-dialog-content>
+        <h4 class="add-person-title">Add Person</h4>
         <form name="form">
             <md-input-container class="md-block">
                 <label for="input_email">Email</label>
@@ -27,9 +28,9 @@
             </md-input-container>
         </form>
     </md-dialog-content>
-    <md-dialog-actions>
+    <md-dialog-actions style="border-top-style: none">
         <md-button class="md-primary" ng-click="ctrl.ok()">
-            <span>OK</span>
+            <span>Add</span>
             <div class="md-ripple-container"></div>
         </md-button>
     </md-dialog-actions>
