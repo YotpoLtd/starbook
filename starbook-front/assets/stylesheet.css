@@ -371,3 +371,12 @@ body {
 .add-person-title {
     text-align: center;
 }
+
+.update-person-dialog{
+    width: 100%;
+    padding: 35px;
+}
+
+.update-person-title {
+    text-align: center;
+}

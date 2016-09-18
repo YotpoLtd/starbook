@@ -75,6 +75,28 @@ angular.module('myApp')
         }
       };
 
+      self.updatePerson = function(ev) {
+        closeSideBar();
+        $mdDialog.show({
+          controller: 'UpdatePersonController',
+          controllerAs: 'ctrl',
+          templateUrl: 'assets/update_person_template.html',
+          parent: angular.element(document.body),
+          targetEvent: ev,
+          clickOutsideToClose: true
+        }).then(function(fields) {
+          fields['email'] = window.globalVar.currentUser.email;
+          return api.update(fields);
+        }).then(function() {
+          $mdToast.showSimple('Person updated successfully');
+          toggleSideBar();
+        }, function() {
+          $mdToast.showSimple('Failed to update person');
+          toggleSideBar();
+        })
+
+      };
+
       self.addPerson = function(ev) {
         closeSideBar();
         $mdDialog.show({
@@ -88,8 +110,10 @@ angular.module('myApp')
           return api.add_person(fields);
         }).then(function() {
           $mdToast.showSimple('Person added successfully');
+          toggleSideBar();
         }, function() {
           $mdToast.showSimple('Failed to add person');
+          toggleSideBar();
         })
       };
 
