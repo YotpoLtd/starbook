@@ -23,6 +23,8 @@ class FlaskMethods:
 
             if action == 'tree':
                 return api.tree()
+            elif action == 'get_all':
+                return api.get_all()
             elif action == 'query':
                 return api.query()
             elif action == 'update_person':

@@ -1,6 +1,6 @@
 angular.module('myApp')
-  .controller('mainCtrl', ['$scope', '$http', 'api', 'ENV', '$timeout', '$window', '$cookies', '$mdDialog',
-    function($scope, $http, api, ENV, $timeout, $window, $cookies, $mdDialog) {
+  .controller('mainCtrl', ['$scope', '$http', 'api', 'ENV', '$timeout', '$window', '$cookies', '$mdDialog', '$mdToast',
+    function($scope, $http, api, ENV, $timeout, $window, $cookies, $mdDialog, $mdToast) {
       var auth2;
       var self = this;
       var starbook_token = 'starbook-token';
@@ -71,11 +71,29 @@ angular.module('myApp')
 
       self.meClicked = function() {
         if (self.email) {
-          globalVar.updateBy({email: self.email});
+          globalVar.updateBy({ email: self.email });
         }
       };
 
-      self.editTitle = function () {
+      self.addPerson = function(ev) {
+        closeSideBar();
+        $mdDialog.show({
+          controller: 'AddPersonController',
+          controllerAs: 'ctrl',
+          templateUrl: 'assets/add_person_template.html',
+          parent: angular.element(document.body),
+          targetEvent: ev,
+          clickOutsideToClose: true
+        }).then(function(fields) {
+          return api.add_person(fields);
+        }).then(function() {
+          $mdToast.showSimple('Person added successfully');
+        }, function() {
+          $mdToast.showSimple('Failed to add person');
+        })
+      };
+
+      self.editTitle = function() {
         var newTitle;
         var confirm = $mdDialog.prompt()
           .title('Edit Title')
@@ -86,7 +104,7 @@ angular.module('myApp')
         $mdDialog.show(confirm).then(function(result) {
           var email = window.globalVar.currentUser.email;
           newTitle = result;
-          return api.update({email: email, title: result});
+          return api.update({ email: email, title: result });
         }).then(function() {
           window.globalVar.currentUser.title = newTitle;
           var userTitle = document.getElementsByClassName("user-title")[0];
@@ -110,7 +128,7 @@ angular.module('myApp')
         $mdDialog.show(confirm).then(function(result) {
           var email = window.globalVar.currentUser.email;
           newPhone = result;
-          return api.update({email: email, phone: result});
+          return api.update({ email: email, phone: result });
         }).then(function() {
           window.globalVar.currentUser.phone = newPhone;
           var userPhone = document.getElementsByClassName("user-phone")[0];
