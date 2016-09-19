@@ -3,7 +3,6 @@
         <h4 class="update-person-title">Update {{ctrl.person.name}} ({{ctrl.person.email}})</h4>
         <form name="form">
             <md-input-container class="md-block">
-                <label>Field</label>
                 <md-select ng-model="ctrl.fieldName" placeholder="Select a field" ng-change="ctrl.fieldNameSelected()">
                     <md-option ng-value="fieldName" ng-repeat="fieldName in ctrl.possibleFields">{{ fieldName }}
                     </md-option>
