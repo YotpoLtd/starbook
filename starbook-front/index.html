@@ -56,7 +56,7 @@
     <div ng-controller="myCtrl as ctrl">
 
         <div class="search-bar-container">
-            <input type="text" ng-model="search" ng-model-options="{ debounce: 200 }" placeholder="Search" class="search-bar" ng-change="textChanged()" ng-blur="onLeaveSearch()"/>
+            <input type="text" ng-model="ctrl.search" ng-model-options="{ debounce: 200 }" placeholder="Search" class="search-bar" ng-change="ctrl.textChanged()" ng-blur="ctrl.onLeaveSearch()"/>
         </div>
 
         <div class="user-details-wrapper">
@@ -80,19 +80,13 @@
             </a-->
             <hr class="seperator" style="margin-top: 25px;"/>
             <div class="skills">Professional Skills<span class="add-skill fa fa-plus" ng-click="addSkill()"></span></div>
-            <div class="user-skills">
-                <span class="user-skill">talking</span>
-                <span class="user-skill">gossiping</span>
-                <span class="user-skill">googeling</span>
+            <div class="user-skills" ng-click="ctrl.setSearch($event)">
             </div>
 
             <hr class="seperator"/>
             <div class="skills">Personal Hobbies<span class="add-skill fa fa-plus" ng-click="addHobby()"></span>
             </div>
-            <div class="user-hobbies">
-                <span class="user-skill">golf</span>
-                <span class="user-skill">soccer</span>
-                <span class="user-skill">basketball</span>
+            <div class="user-hobbies" ng-click="ctrl.setSearch($event)">
             </div>
 
         </div>

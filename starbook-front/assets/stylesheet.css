@@ -186,6 +186,7 @@ body {
 
 .user-skills {
     position: relative;
+    outline-style: none;
 }
 
 .user-skill {
@@ -196,11 +197,13 @@ body {
     display: inline-block;
     margin-bottom: 10px;
     position: relative;
+    cursor: pointer;
 }
 
 .user-hobbies {
     padding-bottom: 5px;
     position: relative;
+    outline-style: none;
 }
 
 .table-row {

@@ -5,8 +5,6 @@ angular.module('myApp')
       var self = this;
       var starbook_token = 'starbook-token';
 
-      $scope.search = '';
-
       self.auth = true;
 
       gapi.load('auth2', function() {
