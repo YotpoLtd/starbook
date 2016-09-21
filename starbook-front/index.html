@@ -70,7 +70,9 @@
             <hr class="seperator"/>
             <a class="user-email-link" target="_blank"><div class="user-email">hive@yotpo.com</div></a>
             <img src="images/email.png">
-            <div ng-click="mainCtrl.editPhone()" class="user-phone">1800-YOTPO-HIVE</div>
+            <a class="user-phone-link" ng-click="mainCtrl.editPhone()">
+                <div class="user-phone">1800-YOTPO-HIVE</div>
+            </a>
             <img src="images/Phone_icon.png">
             <!--a href="https://yotpo.slack.com/messages/" target="_blank">
                 <div class="user-slack">Open a slack chat</div>
@@ -411,10 +413,6 @@
             update(root);
         }
 
-        function getFakePhone() {
-            return Math.random().toString().slice(2,11);
-        }
-
         function updateSideBar(node) {
 
             window.globalVar = window.globalVar || {};
@@ -439,12 +437,12 @@
             userEmailLink.href = 'mailto:' + node.email;
 
             var userPhone = document.getElementsByClassName("user-phone")[0];
-            userPhone.textContent = node.phone || getFakePhone();
-            var jqUserPhone = $(userPhone);
+            userPhone.textContent = node.phone;
+            var userPhoneLink = document.getElementsByClassName("user-phone-link")[0];
             if (globalVar.currentUser.email === globalVar.looged_user_email) {
-                jqUserPhone.addClass('clickable');
+                userPhoneLink.href = '';
             } else {
-                jqUserPhone.removeClass('clickable');
+                userPhoneLink.href = 'tel:' + node.phone;
             }
 
             var userSkills = document.getElementsByClassName("user-skills")[0];
