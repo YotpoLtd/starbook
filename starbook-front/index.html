@@ -68,7 +68,7 @@
                class="fa fa-pencil-square-o edit-user-title"
                aria-hidden="true"></i>
             <hr class="seperator"/>
-            <div class="user-email">hive@yotpo.com</div>
+            <a class="user-email-link" target="_blank"><div class="user-email">hive@yotpo.com</div></a>
             <img src="images/email.png">
             <div ng-click="mainCtrl.editPhone()" class="user-phone">1800-YOTPO-HIVE</div>
             <img src="images/Phone_icon.png">
@@ -218,7 +218,6 @@
         root = treeData;
         root.x0 = height / 2;
         root.y0 = 0;
-        root.image = 'images/yotpo.png';
 
         oldRoot = root;
 
@@ -435,6 +434,9 @@
 
             var userEmail = document.getElementsByClassName("user-email")[0];
             userEmail.textContent = node.email;
+
+            var userEmailLink = document.getElementsByClassName("user-email-link")[0];
+            userEmailLink.href = 'mailto:' + node.email;
 
             var userPhone = document.getElementsByClassName("user-phone")[0];
             userPhone.textContent = node.phone || getFakePhone();
