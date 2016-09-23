@@ -7,14 +7,14 @@ angular.element(document).ready(function() {
       function($scope, $http, api, $timeout, $mdDialog, $sce) {
         var self = this;
 
-        $scope.search = '';
+        self.search = '';
 
-        $scope.textChanged = function() {
+        self.textChanged = function() {
           self.showTable = false;
-          if ($scope.search.length > 0) {
+          if (self.search.length > 0) {
             // For example if search = ' #abc #adf  sw45   asdfg  '
             // It will be replaces with 'abc* adf* sw45* asdfg*'
-            var term = $scope.search.replace(/\W/g, ' ').trim().split(/\s+/).join('* ') + '*';
+            var term = self.search.replace(/\W/g, ' ').trim().split(/\s+/).join('* ') + '*';
             api.get(term, function(data) {
               self.people = data && data.hits && data.hits.hits.map(function(person) {
                   person.name = $sce.trustAsHtml((person.highlight && person.highlight.name && person.highlight.name[0]) || person._source.name);
@@ -34,7 +34,7 @@ angular.element(document).ready(function() {
           }
         };
 
-        $scope.onLeaveSearch = function() {
+        self.onLeaveSearch = function() {
           $timeout(function() {
             self.showTable = false;
           }, 500);
@@ -43,6 +43,7 @@ angular.element(document).ready(function() {
         self.personClicked = function(person) {
           var name = person._source.name;
           globalVar.updateBy({ name: name });
+          self.onLeaveSearch();
         };
 
         function normalizeListOfStrings(listOfStrings) {
@@ -83,13 +84,20 @@ angular.element(document).ready(function() {
                 var skillSpan = angular.element('<span class="user-skill">' + value + '<i style="display: none" class="delete-skill-x fa fa-times-circle"></i></span>');
                 skillSpan.data('skill-name', value);
                 skillSpan.data('key', 'expertise');
-                skillSpan.click(globalVar.deleteSkill);
                 angular.element('.user-skills').append(skillSpan);
               });
             });
           }, function() {
             // user canceled
           });
+        };
+
+        self.setSearch = function(ev) {
+          var el = $(ev.toElement);
+          if (el.hasClass('user-skill')) {
+            self.search = el.text();
+            self.textChanged();
+          }
         };
 
         $scope.addHobby = function(name) {
@@ -109,7 +117,6 @@ angular.element(document).ready(function() {
                 var hobbySpan = angular.element('<span class="user-skill">' + value + '<i style="display: none" class="delete-hobby-x fa fa-times-circle"></i></span>');
                 hobbySpan.data('skill-name', value);
                 hobbySpan.data('key', 'hobbies');
-                hobbySpan.click(globalVar.deleteSkill);
                 angular.element('.user-hobbies').append(hobbySpan);
               });
             });

@@ -56,7 +56,7 @@
     <div ng-controller="myCtrl as ctrl">
 
         <div class="search-bar-container">
-            <input type="text" ng-model="search" ng-model-options="{ debounce: 200 }" placeholder="Search" class="search-bar" ng-change="textChanged()" ng-blur="onLeaveSearch()"/>
+            <input type="text" ng-model="ctrl.search" ng-model-options="{ debounce: 200 }" placeholder="Search" class="search-bar" ng-change="ctrl.textChanged()" ng-blur="ctrl.onLeaveSearch()"/>
         </div>
 
         <div class="user-details-wrapper">
@@ -68,9 +68,11 @@
                class="fa fa-pencil-square-o edit-user-title"
                aria-hidden="true"></i>
             <hr class="seperator"/>
-            <div class="user-email">hive@yotpo.com</div>
+            <a class="user-email-link" target="_blank"><div class="user-email">hive@yotpo.com</div></a>
             <img src="images/email.png">
-            <div ng-click="mainCtrl.editPhone()" class="user-phone">1800-YOTPO-HIVE</div>
+            <a class="user-phone-link" ng-click="mainCtrl.editPhone()">
+                <div class="user-phone">1800-YOTPO-HIVE</div>
+            </a>
             <img src="images/Phone_icon.png">
             <!--a href="https://yotpo.slack.com/messages/" target="_blank">
                 <div class="user-slack">Open a slack chat</div>
@@ -78,19 +80,13 @@
             </a-->
             <hr class="seperator" style="margin-top: 25px;"/>
             <div class="skills">Professional Skills<span class="add-skill fa fa-plus" ng-click="addSkill()"></span></div>
-            <div class="user-skills">
-                <span class="user-skill">talking</span>
-                <span class="user-skill">gossiping</span>
-                <span class="user-skill">googeling</span>
+            <div class="user-skills" ng-click="ctrl.setSearch($event)">
             </div>
 
             <hr class="seperator"/>
             <div class="skills">Personal Hobbies<span class="add-skill fa fa-plus" ng-click="addHobby()"></span>
             </div>
-            <div class="user-hobbies">
-                <span class="user-skill">golf</span>
-                <span class="user-skill">soccer</span>
-                <span class="user-skill">basketball</span>
+            <div class="user-hobbies" ng-click="ctrl.setSearch($event)">
             </div>
 
         </div>
@@ -218,7 +214,6 @@
         root = treeData;
         root.x0 = height / 2;
         root.y0 = 0;
-        root.image = 'images/yotpo.png';
 
         oldRoot = root;
 
@@ -412,10 +407,6 @@
             update(root);
         }
 
-        function getFakePhone() {
-            return Math.random().toString().slice(2,11);
-        }
-
         function updateSideBar(node) {
 
             window.globalVar = window.globalVar || {};
@@ -436,13 +427,16 @@
             var userEmail = document.getElementsByClassName("user-email")[0];
             userEmail.textContent = node.email;
 
+            var userEmailLink = document.getElementsByClassName("user-email-link")[0];
+            userEmailLink.href = 'mailto:' + node.email;
+
             var userPhone = document.getElementsByClassName("user-phone")[0];
-            userPhone.textContent = node.phone || getFakePhone();
-            var jqUserPhone = $(userPhone);
+            userPhone.textContent = node.phone;
+            var userPhoneLink = document.getElementsByClassName("user-phone-link")[0];
             if (globalVar.currentUser.email === globalVar.looged_user_email) {
-                jqUserPhone.addClass('clickable');
+                userPhoneLink.href = '';
             } else {
-                jqUserPhone.removeClass('clickable');
+                userPhoneLink.href = 'tel:' + node.phone;
             }
 
             var userSkills = document.getElementsByClassName("user-skills")[0];
