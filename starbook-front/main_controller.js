@@ -1,6 +1,7 @@
 angular.module('myApp')
   .controller('mainCtrl', ['$scope', '$http', 'api', 'ENV', '$timeout', '$window', '$cookies', '$mdDialog', '$mdToast',
-    function($scope, $http, api, ENV, $timeout, $window, $cookies, $mdDialog, $mdToast) {
+    'authService',
+    function($scope, $http, api, ENV, $timeout, $window, $cookies, $mdDialog, $mdToast, authService) {
       var auth2;
       var self = this;
       var starbook_token = 'starbook-token';
@@ -25,6 +26,7 @@ angular.module('myApp')
                 var basicProfile = auth2.currentUser.get().getBasicProfile();
                 window.globalVar.looged_user_email = basicProfile.getEmail();
                 window.globalVar.logged_image = basicProfile.getImageUrl();
+                authService.saveToken(auth2);
                 api.tree().success(function(response) {
                   self.email = auth2.currentUser.get().getBasicProfile().getEmail();
                   api.get_role().success(function(role) {
@@ -42,16 +44,12 @@ angular.module('myApp')
             populateGraph(response);
           })
         }
-
-
       });
 
       self.signIn = function() {
         auth2.signIn().then(function() {
           $timeout(function() {
-            var token = auth2.currentUser.get().getAuthResponse().id_token;
-            console.log(token);
-            $cookies.put(starbook_token, token);
+            authService.saveToken(auth2);
             $window.location.reload();
           });
         });
