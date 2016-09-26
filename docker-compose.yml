@@ -30,7 +30,9 @@ services:
   #     - slackbot/slackbot-example.env
 
   starbook-front:
-    build: starbook-front
+    build:
+      context: starbook-front
+      dockerfile: starbook-front/Dockerfile.local
     image: starbook-front
     env_file:
       - starbook-front/starbook-front-example.env
