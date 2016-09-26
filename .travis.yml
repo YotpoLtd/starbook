@@ -1,26 +1,19 @@
 sudo: required
-
+dist: trusty
+language: generic
 services:
   - docker
-
-language: generic
-
-script:
-  - docker login -u="$YOTPO_REGISTRY_USER" -p="$YOTPO_REGISTRY_PASSWORD" registry.yotpo.com
+env:
+  global:
+  - PROJECT="hive"
+  - BUILD_DATE=$(date +"%Y-%m-%d_%H-%M-%S")
+before_install:
   - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
   - eval $(aws ecr get-login --region us-east-1)
-
-  - docker build -t hive-front starbook-front
-  - docker tag hive-front registry.yotpo.com/hive-front:"$TRAVIS_COMMIT"
-  - docker tag hive-front 402837048690.dkr.ecr.us-east-1.amazonaws.com/hive-front:"$TRAVIS_COMMIT"
-
-  - docker build -t hive-back starbook-backend
-  - docker tag hive-back registry.yotpo.com/hive-back:"$TRAVIS_COMMIT"
-  - docker tag hive-back 402837048690.dkr.ecr.us-east-1.amazonaws.com/hive-back:"$TRAVIS_COMMIT"
-
-  - docker images | grep hive
-
-  - # docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/hive-front:"$TRAVIS_COMMIT"
-  - # docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/hive-back:"$TRAVIS_COMMIT"
-  - docker push registry.yotpo.com/hive-front:"$TRAVIS_COMMIT"
-  - docker push registry.yotpo.com/hive-back:"$TRAVIS_COMMIT"
+script:
+  - docker build -t 402837048690.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/front:${TRAVIS_COMMIT} starbook-front
+  - docker build -t 402837048690.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/back:${TRAVIS_COMMIT} starbook-backend
+after_success:
+  - docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/front:${TRAVIS_COMMIT} starbook-front
+  - docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/back:${TRAVIS_COMMIT} starbook-backend

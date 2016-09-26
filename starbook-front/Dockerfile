@@ -1,5 +1,10 @@
-FROM node:4
-RUN npm install -g serve
-COPY . /var/www/
-# RUN cd /var/www && npm install
-CMD serve -p ${PORT} /var/www
+FROM busybox
+
+MAINTAINER ops@yotpo.com
+
+RUN mkdir -p /yotpo/starbook
+
+COPY ./ /yotpo/starbook/
+VOLUME /yotpo/starbook
+
+CMD [ "echo", "Find Your boss!" ]
