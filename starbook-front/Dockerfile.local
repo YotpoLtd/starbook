@@ -1,4 +1,4 @@
-FROM node:4
+FROM node
 RUN npm install -g serve
 COPY . /var/www/
 # RUN cd /var/www && npm install
