@@ -15,5 +15,4 @@ script:
   - docker build -t 402837048690.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/front:${TRAVIS_COMMIT} starbook-front
   - docker build -t 402837048690.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/back:${TRAVIS_COMMIT} starbook-backend
 after_success:
-  - docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/front:${TRAVIS_COMMIT}
-  - docker push 402837048690.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/back:${TRAVIS_COMMIT}
+  - "./.travis/after_success.sh"
