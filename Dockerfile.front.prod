@@ -9,7 +9,7 @@ VOLUME /etc/nginx/yotpo
 
 # Files
 RUN mkdir -p /yotpo/starbook
-COPY ./ /yotpo/starbook/
+COPY starbook-front/ /yotpo/starbook/
 VOLUME /yotpo/starbook
 
 CMD [ "echo", "Find Your boss!" ]
