@@ -20,8 +20,9 @@ def netcat(host, port, content):
 def log(content):
     if not LOGSTASH_HOST:
         return
-    log = {'component': 'webserver',
-           'webserver': content}
+    log = {'component': 'backend',
+           'project': 'hive',
+           'msg': content}
 
     try:
         netcat(LOGSTASH_HOST, LOGSTASH_PORT, json.dumps(log))
