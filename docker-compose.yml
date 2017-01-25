@@ -1,6 +1,15 @@
 version: '2'
-services:
 
+networks:
+  starbook:
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.35.0.0/16
+        ip_range: 172.35.5.0/24
+        gateway: 172.35.0.1
+
+services:
   starbook-backend:
     build: starbook-backend
     image: starbook-backend
@@ -11,16 +20,22 @@ services:
     links:
       - elasticsearch
       - redis
+    networks:
+      - starbook
 
   redis:
     image: redis
     ports:
       - "6379:6379"
+    networks:
+      - starbook
 
   elasticsearch:
     image: elasticsearch:2.3
     ports:
       - "9200:9200"
+    networks:
+      - starbook
 
   # slackbot:
   #   build: slackbot
@@ -30,7 +45,9 @@ services:
   #     - slackbot/slackbot-example.env
 
   starbook-front:
-    build: starbook-front
+    build:
+      context: starbook-front
+      dockerfile: Dockerfile.local
     image: starbook-front
     env_file:
       - starbook-front/starbook-front-example.env
@@ -38,6 +55,8 @@ services:
       - "8080:8080"
     volumes:
       - ./starbook-front/env:/var/www/env/
+    networks:
+      - starbook
 
   kibana:
     image: kibana:4.5.2
@@ -49,6 +68,8 @@ services:
       - elasticsearch
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
+    networks:
+      - starbook
 
   logstash:
     image: logstash
@@ -59,3 +80,5 @@ services:
       - ./logstash:/config-dir
     ports:
       - 5678:5678
+    networks:
+      - starbook

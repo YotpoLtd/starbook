@@ -1,5 +1,5 @@
-STAR_BOOK_API = "http://localhost:5000/api";
-SEND_COOKIES = false;
+STAR_BOOK_API = "https://hive-back.yotpo.com/api";
+SEND_COOKIES = true;
 
 angular.module('myApp')
   .constant("ENV", {
