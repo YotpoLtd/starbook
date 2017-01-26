@@ -156,6 +156,29 @@ angular.module('myApp')
         }, function() {
           // user canceled
         });
-      }
+      };
+
+      self.choosePic = function(ev) {
+        if (globalVar.currentUser.email !== globalVar.looged_user_email) {
+          return;
+        }
+
+        closeSideBar();
+        $mdDialog.show({
+          controller: 'ChoosePicController',
+          controllerAs: 'ctrl',
+          templateUrl: 'assets/choose_pic_modal.html',
+          parent: angular.element(document.body),
+          targetEvent: ev,
+          clickOutsideToClose: true
+        }).then(function(imageUrl) {
+          return api.update({ email: window.globalVar.currentUser.email, image: imageUrl });
+        }).then(function() {
+          $mdToast.showSimple('Picture chosen');
+          toggleSideBar();
+        }, function() {
+          toggleSideBar();
+        })
+      };
 
     }]);

@@ -162,6 +162,8 @@ body {
 
 .user-image {
     border-radius: 50%;
+    outline: none;
+    cursor: pointer;
 }
 
 .user-title {
@@ -365,6 +367,10 @@ body {
 .add-person-dialog{
     width: 100%;
     padding: 35px;
+}
+
+.choose-pic-dialog-content {
+    padding: 15px;
 }
 
 .add-person-title {

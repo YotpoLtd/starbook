@@ -1,5 +1,6 @@
 STAR_BOOK_API = "https://hive.yotpo.xyz/api";
 SEND_COOKIES = true;
+FACEBOOK_APP_ID = '765762016914736';
 
 angular.module('myApp')
   .constant("ENV", {

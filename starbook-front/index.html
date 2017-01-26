@@ -21,6 +21,7 @@
     <script src="main_controller.js"></script>
     <script src="js/add_person_controller.js"></script>
     <script src="js/update_person_controller.js"></script>
+    <script src="js/choose_pic_controller.js"></script>
     <script src="js/http_config.js"></script>
     <script src="js/auth_service.js"></script>
     <script src="api.js"></script>
@@ -36,6 +37,26 @@
 </head>
 
 <body background="images/BG_img.png" ng-controller="mainCtrl as mainCtrl">
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : FACEBOOK_APP_ID,
+      xfbml      : true,
+      version    : 'v2.8'
+    });
+    FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
 <div class="navbar">
     <img src="images/Yotpo-Logo.png" class="yo-logo"/>
     <img src="images/home.png" class="home" onclick="globalVar.resetRoot()" style="cursor: pointer"/>
@@ -62,7 +83,7 @@
         </div>
 
         <div class="user-details-wrapper">
-            <img class="user-image" src="images/1.png" width="90">
+            <img class="user-image" src="images/1.png" width="90" ng-click="mainCtrl.choosePic()" >
             <div class="user-name">Yotpo Hive</div>
             <div class="user-title">Magician</div>
             <i ng-if="mainCtrl.role.admin"
