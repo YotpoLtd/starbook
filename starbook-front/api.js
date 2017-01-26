@@ -47,9 +47,9 @@ angular.module('myApp')
       add_person: function(fields) {
         return $http.post(ENV.STAR_BOOK_API, addToken({
           action: 'add_person',
-          email: fields.email,
+          email: fields.email.toLowerCase(),
           name: fields.name,
-          boss: fields.boss,
+          boss: fields.boss.toLowerCase(),
           title: fields.title,
           hood: fields.hood,
           phone: fields.phone
