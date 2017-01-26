@@ -32,7 +32,10 @@ angular.module('myApp')
         return $http.post(ENV.STAR_BOOK_API, addToken({ action: 'tree' }), { withCredentials: ENV.SEND_COOKIES });
       },
       update: function(data) {
-        data['action'] = 'update_person';
+        data.action = 'update_person';
+        if (data.boss) {
+          data.boss = data.boss.toLowerCase();
+        }
         return $http.post(ENV.STAR_BOOK_API, addToken(data), { withCredentials: ENV.SEND_COOKIES });
       },
       get_role: function() {
