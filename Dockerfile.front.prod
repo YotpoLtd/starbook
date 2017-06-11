@@ -1,15 +1,9 @@
-FROM busybox
+FROM nginx:alpine
 
 MAINTAINER ops@yotpo.com
 
 # Nginx
-RUN mkdir -p /etc/nginx/yotpo
-COPY nginx/nginx.conf /etc/nginx/yotpo/
-VOLUME /etc/nginx/yotpo
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Files
-RUN mkdir -p /yotpo/starbook
 COPY starbook-front/ /yotpo/starbook/
-VOLUME /yotpo/starbook
-
-CMD [ "echo", "Find Your boss!" ]
