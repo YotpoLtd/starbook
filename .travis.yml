@@ -8,7 +8,7 @@ env:
   - PROJECT="hive"
   - BUILD_DATE=$(date +"%Y-%m-%d_%H-%M-%S")
 before_install:
-- mkdir $HOME/bin
+- mkdir -p $HOME/bin
 - export PATH=$PATH:$HOME/bin
 - wget https://s3.amazonaws.com/ops-yotpo/public/docker/ecr-login-helper/docker-credential-ecr-login -O $HOME/bin/docker-credential-ecr-login
 - chmod +x $HOME/bin/docker-credential-ecr-login
