@@ -1,0 +1,37 @@
+<md-dialog aria-label="Add Person" class="add-person-dialog">
+    <md-dialog-content>
+        <h4 class="add-person-title">Add Person</h4>
+        <form name="form">
+            <md-input-container class="md-block">
+                <label for="input_email">Email</label>
+                <input type="email" ng-model="ctrl.fields.email" id="input_email" required>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label for="input_boss">Boss's Email</label>
+                <input type="email" ng-model="ctrl.fields.boss" id="input_boss" required>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label for="input_name">Name</label>
+                <input type="text" ng-model="ctrl.fields.name" id="input_name" required>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label for="input_title">Title</label>
+                <input type="text" ng-model="ctrl.fields.title" id="input_title" required>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label for="input_hood">Hood</label>
+                <input type="text" ng-model="ctrl.fields.hood" id="input_hood">
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label for="input_phone">Phone</label>
+                <input type="text" ng-model="ctrl.fields.phone" id="input_phone">
+            </md-input-container>
+        </form>
+    </md-dialog-content>
+    <md-dialog-actions style="border-top-style: none">
+        <md-button class="md-primary" ng-click="ctrl.ok()">
+            <span>Add</span>
+            <div class="md-ripple-container"></div>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

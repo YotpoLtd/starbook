@@ -2,14 +2,23 @@ import json
 from oauth2client import client, crypt
 from api import Api
 from env import *
-from flask import request, jsonify, Flask
+from flask import request, jsonify, Flask, send_from_directory
 from logger import log
 
 
 class FlaskMethods:
     def __init__(self, api):
         self.app = Flask(__name__)
+        static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
         app = self.app
+
+        @app.route("/")
+        def send_index():
+            return send_file('index.html')
+
+        @app.route("/static/<path:path>")
+        def send_file(path):
+            return send_from_directory('static', path)
 
         @app.route(APPLICATION_ROOT, methods=['GET', 'POST'])
         def all_routes():
@@ -58,6 +67,8 @@ class FlaskMethods:
         @app.before_request
         def verify_token():
             if DEBUG or request.method == 'OPTIONS':
+                return
+            if request.path.startswith(static_file_dir):
                 return
             token = request.cookies.get('starbook-token') or (request.json and request.json.get('starbook-token'))
             if not token:

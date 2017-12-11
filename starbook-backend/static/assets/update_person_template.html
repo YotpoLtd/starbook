@@ -1,0 +1,24 @@
+<md-dialog aria-label="Update Person" class="update-person-dialog">
+    <md-dialog-content>
+        <h4 class="update-person-title">Update {{ctrl.person.name}} ({{ctrl.person.email}})</h4>
+        <form name="form">
+            <md-input-container class="md-block">
+                <md-select ng-model="ctrl.fieldName" placeholder="Select a field" ng-change="ctrl.fieldNameSelected()">
+                    <md-option ng-value="fieldName" ng-repeat="fieldName in ctrl.possibleFields">{{ fieldName }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label for="field_value">Field Value</label>
+                <input type="text" ng-model="ctrl.fieldValue" id="field_value" required
+                       ng-change="ctrl.fieldValueChanged()">
+            </md-input-container>
+        </form>
+    </md-dialog-content>
+    <md-dialog-actions style="border-top-style: none">
+        <md-button class="md-primary" ng-click="ctrl.ok()">
+            <span>Update</span>
+            <div class="md-ripple-container"></div>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

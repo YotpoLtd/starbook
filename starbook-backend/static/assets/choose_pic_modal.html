@@ -1,0 +1,24 @@
+<md-dialog aria-label="Choose pic" class="add-person-dialog">
+    <md-dialog-content class="choose-pic-dialog-content">
+        <h4 class="add-person-title">Choose pic</h4>
+        <form name="form">
+            <md-input-container class="md-block">
+                <md-radio-group ng-model="ctrl.pic" ng-change="ctrl.choosePic()">
+
+                    <md-radio-button ng-repeat="p in ctrl.pics" ng-value="p.value" aria-label="{{ p.label }}">
+                        <p ng-bind="p.label"></p>
+                        <img ng-src="{{ctrl.image[p.value]}}"/>
+                    </md-radio-button>
+                </md-radio-group>
+            </md-input-container>
+        </form>
+        <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false"
+             data-auto-logout-link="true"></div>
+    </md-dialog-content>
+    <md-dialog-actions style="border-top-style: none">
+        <md-button class="md-primary" ng-click="ctrl.ok()">
+            <span>Choose</span>
+            <div class="md-ripple-container"></div>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
