@@ -77,20 +77,5 @@ class FlaskMethods:
 
             log({'idinfo': idinfo, 'req': request.json, 'args': request.args})
 
-            outdated = False
-            google_id_redis_key = 'google_id:{}'.format(idinfo['sub'])
-            cached_google_info = api.cache.redis.get(google_id_redis_key)
-            if cached_google_info:
-                google_info = json.loads(cached_google_info.decode())
-                if google_info['image'] != idinfo['picture'] or google_info[PERSON_UNIQUE_KEY] != idinfo['email']:
-                    outdated = True
-            else:
-                outdated = True
-
-            if outdated:
-                api.utils.update_person_with_json(
-                    {PERSON_UNIQUE_KEY: idinfo['email'], 'image': idinfo['picture'], 'google_id': idinfo['sub']})
-                api.cache.redis.set(google_id_redis_key,
-                                    json.dumps(
-                                        {'image': idinfo['picture'], PERSON_UNIQUE_KEY: idinfo['email']}).encode(),
-                                    ex=REDIS_EXPIRY)
+            api.utils.update_person_with_json(
+                {PERSON_UNIQUE_KEY: idinfo['email'], 'image': idinfo['picture'], 'google_id': idinfo['sub']})

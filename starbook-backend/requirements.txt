@@ -1,4 +1,3 @@
 flask
 elasticsearch == 2
 oauth2client
-redis

@@ -1,12 +1,10 @@
 from env import *
 from flask import request, jsonify
 from verify import verify_email_from_request, verify_admin, get_role
-import json
 
 
 class Api:
-    def __init__(self, cache, utils):
-        self.cache = cache
+    def __init__(self, utils):
         self.utils = utils
 
     def add_person(self):
@@ -34,7 +32,6 @@ class Api:
         except:
             id = None
         res = es.index(PERSONS_INDEX, PERSONS_TYPE, person, id)
-        self.cache.clear_cache()
         return jsonify({'created': res['created']})
 
     def remove_person(self):
@@ -79,7 +76,6 @@ class Api:
             self.utils.update_person_with_json({PERSON_UNIQUE_KEY: child['_source'][PERSON_UNIQUE_KEY],
                                                 'boss': boss})
         es.delete(PERSONS_INDEX, PERSONS_TYPE, found['_id'])
-        self.cache.clear_cache()
         return jsonify({'found': found, 'children': children})
 
     def update_person(self):
@@ -92,9 +88,6 @@ class Api:
     def query(self):
         query = request.json
         query_string = query['query']
-        cached = self.cache.queries_cache.get(query_string)
-        if cached is not None:
-            return jsonify(json.loads(cached.decode()))
         elastic_query = {
             'size': 1000,
             'query': {
@@ -114,15 +107,9 @@ class Api:
             elastic_query['highlight']['require_field_match'] = True
 
         res = self.utils.es.search(PERSONS_INDEX, PERSONS_TYPE, elastic_query)
-        self.cache.queries_cache.set(query_string, json.dumps(res).encode())
         return jsonify(res)
 
     def tree(self):
-        self.cache.redis.hincrby(USAGE_COUNTER, REDIS_RESPONSE_TREE_KEY)
-        tree_usage = int(self.cache.redis.hget(USAGE_COUNTER, REDIS_RESPONSE_TREE_KEY).decode())
-        if tree_usage > 3:
-            cached = self.cache.redis.get(REDIS_RESPONSE_TREE_KEY)
-            return jsonify(json.loads(cached.decode()))
         res = self.utils.es.search(PERSONS_INDEX, PERSONS_TYPE, {'size': 1000})
         persons = {}
         for p in res['hits']['hits']:
@@ -141,7 +128,6 @@ class Api:
             p = persons[persons[p]['boss']][PERSON_UNIQUE_KEY]
 
         res = persons[p]
-        self.cache.redis.set(REDIS_RESPONSE_TREE_KEY, json.dumps(res).encode(), ex=REDIS_EXPIRY)
         return jsonify(res)
 
     def get_all(self):
