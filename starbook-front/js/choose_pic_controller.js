@@ -38,7 +38,6 @@ angular.module('myApp')
 
     function handleFacebookResponse(response) {
       if (response.status === 'connected') {
-        console.log('Logged in.');
         FB.api('/me/picture?width=96&height=96', function(response) {
           $timeout(function() {
             self.image.facebook = response.data && response.data.url;
