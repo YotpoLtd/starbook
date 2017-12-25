@@ -1,2 +1,4 @@
 .idea/
 starbook-backend-vars.env
+__pycache__/
+venv/

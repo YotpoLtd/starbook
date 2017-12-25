@@ -58,7 +58,6 @@ angular.module('myApp')
       self.signOut = function() {
         auth2.signOut().then(function() {
           $timeout(function() {
-            console.log('User signed out.');
             $cookies.remove(starbook_token);
             $window.location.reload();
           });

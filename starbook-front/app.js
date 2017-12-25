@@ -63,7 +63,6 @@ angular.element(document).ready(function() {
               callback();
             }
           }).error(function(error) {
-            console.log(error);
           });
         }
 
@@ -148,7 +147,6 @@ angular.element(document).ready(function() {
         function removePerson() {
           var email_to_remove = globalVar.currentUser.email;
           api.remove_person(email_to_remove, function(data) {
-            console.log(data);
           });
           location.reload();
         }

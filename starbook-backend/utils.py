@@ -5,9 +5,8 @@ from flask import jsonify
 
 
 class Utils:
-    def __init__(self, cache):
+    def __init__(self):
         self.es = Elasticsearch([{"host": os.environ['ELASTIC_HOST'], "port": os.environ['ELASTIC_PORT']}])
-        self.cache = cache
 
     def update_person_with_json(self, person):
         try:
@@ -27,5 +26,4 @@ class Utils:
             return jsonify({'status': 'Not found'}), 404
         found['_source'].update(person)
         self.es.index(PERSONS_INDEX, PERSONS_TYPE, found['_source'], found['_id'])
-        self.cache.clear_cache()
         return jsonify({'status': 'ok'})
