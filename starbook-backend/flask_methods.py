@@ -2,7 +2,7 @@ import json
 from oauth2client import client, crypt
 from api import Api
 from env import *
-from flask import request, jsonify, Flask, send_from_directory
+from flask import request, jsonify, Flask, send_from_directory, render_template
 from logger import log
 
 
@@ -14,11 +14,15 @@ class FlaskMethods:
 
         @app.route("/")
         def send_index():
-            return send_file('index.html')
+            return render_template('index.html',
+                                   client_id=CLIENT_ID,
+                                   starbook_api=STAR_BOOK_API_ENDPOINT,
+                                   send_cookies=int(SEND_COOKIES),
+                                   facebook_app_id=FACEBOOK_APP_ID)
 
         @app.route("/static/<path:path>")
         def send_file(path):
-            return send_from_directory('static', path)
+            return send_from_directory(static_file_dir, path)
 
         @app.route(APPLICATION_ROOT, methods=['GET', 'POST'])
         def all_routes():

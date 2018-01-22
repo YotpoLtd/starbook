@@ -15,3 +15,6 @@ ADMINS = (os.environ['ADMINS'] or '').split(',')
 LOGSTASH_HOST = os.getenv('LOGSTASH_HOST', None)
 LOGSTASH_PORT = int(os.getenv('LOGSTASH_PORT', 0))
 USAGE_COUNTER = 'usage_counter'
+STAR_BOOK_API_ENDPOINT = os.environ['STAR_BOOK_API_ENDPOINT']
+SEND_COOKIES = os.getenv('SEND_COOKIES', True)
+FACEBOOK_APP_ID = os.environ['FACEBOOK_APP_ID']
