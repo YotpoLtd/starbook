@@ -19,7 +19,7 @@
     <script>
       window.env_vars = {
         "GOOGLE_SIGN_IN_CLIENT_ID": "{{ client_id }}",
-        "STAR_BOOK_API": "{{ starbook_api }}",
+        "HIVE_API": "{{ hive_api }}",
         "SEND_COOKIES": Boolean({{ send_cookies }})
       };
     </script>
@@ -545,7 +545,7 @@
         function updateDetails(data) {
             $.ajax({
                 type: "POST",
-                url: STAR_BOOK_API,
+                url: HIVE_API,
                 data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',

@@ -4,7 +4,7 @@ angular.module('myApp')
     function($scope, $http, api, ENV, $timeout, $window, $cookies, $mdDialog, $mdToast, authService) {
       var auth2;
       var self = this;
-      var starbook_token = 'starbook-token';
+      var hive_token = 'hive-token';
 
       self.auth = true;
 
@@ -59,7 +59,7 @@ angular.module('myApp')
         auth2.signOut().then(function() {
           $timeout(function() {
             console.log('User signed out.');
-            $cookies.remove(starbook_token);
+            $cookies.remove(hive_token);
             $window.location.reload();
           });
         });

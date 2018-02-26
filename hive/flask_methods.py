@@ -16,7 +16,7 @@ class FlaskMethods:
         def send_index():
             return render_template('index.html',
                                    client_id=CLIENT_ID,
-                                   starbook_api=STAR_BOOK_API_ENDPOINT,
+                                   hive_api=HIVE_API_ENDPOINT,
                                    send_cookies=int(SEND_COOKIES),
                                    facebook_app_id=FACEBOOK_APP_ID)
 
@@ -74,7 +74,7 @@ class FlaskMethods:
                 return
             if request.path.startswith(static_file_dir):
                 return
-            token = request.cookies.get('starbook-token') or (request.json and request.json.get('starbook-token'))
+            token = request.cookies.get('hive-token') or (request.json and request.json.get('hive-token'))
             if not token:
                 return jsonify({'error': 'no token'}), 401
             try:

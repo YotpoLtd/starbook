@@ -6,7 +6,7 @@ from oauth2client import client
 def verify_email_from_request():
     if DEBUG:
         return
-    token = request.cookies.get('starbook-token') or (request.json and request.json.pop('starbook-token'))
+    token = request.cookies.get('hive-token') or (request.json and request.json.pop('hive-token'))
     google_email = client.verify_id_token(token, CLIENT_ID)['email']
     request_email = request.json.get(PERSON_UNIQUE_KEY, None)
     if request_email is None:
@@ -18,7 +18,7 @@ def verify_email_from_request():
 def verify_admin():
     if DEBUG:
         return
-    token = request.cookies.get('starbook-token') or (request.json and request.json.pop('starbook-token'))
+    token = request.cookies.get('hive-token') or (request.json and request.json.pop('hive-token'))
     google_email = client.verify_id_token(token, CLIENT_ID)['email']
     if google_email not in ADMINS:
         return jsonify({'error': 'You are not allowed to do that'}), 403
@@ -27,6 +27,6 @@ def verify_admin():
 def get_role():
     if DEBUG:
         return jsonify({'admin': True})
-    token = request.cookies.get('starbook-token') or (request.json and request.json.pop('starbook-token'))
+    token = request.cookies.get('hive-token') or (request.json and request.json.pop('hive-token'))
     google_email = client.verify_id_token(token, CLIENT_ID)['email']
     return jsonify({'admin': google_email in ADMINS})

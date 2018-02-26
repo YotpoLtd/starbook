@@ -1,7 +1,7 @@
 angular.module('myApp')
   .factory('api', ['$http', '$timeout', 'ENV', '$cookies', function($http, $timeout, ENV, $cookies) {
     function addToken(query) {
-      query['starbook-token'] = $cookies.get('starbook-token');
+      query['hive-token'] = $cookies.get('hive-token');
       return query;
     }
 
@@ -15,7 +15,7 @@ angular.module('myApp')
         };
 
         $timeout(function() {
-          $http.post(ENV.STAR_BOOK_API, addToken({
+          $http.post(ENV.HIVE_API, addToken({
             action: 'query',
             query: query,
             fields: ['boss', 'phone', 'title', 'hobbies', 'hood', 'name', 'expertise', 'email']
@@ -29,26 +29,26 @@ angular.module('myApp')
         });
       },
       tree: function() {
-        return $http.post(ENV.STAR_BOOK_API, addToken({ action: 'tree' }), { withCredentials: ENV.SEND_COOKIES });
+        return $http.post(ENV.HIVE_API, addToken({ action: 'tree' }), { withCredentials: ENV.SEND_COOKIES });
       },
       update: function(data) {
         data.action = 'update_person';
         if (data.boss) {
           data.boss = data.boss.toLowerCase();
         }
-        return $http.post(ENV.STAR_BOOK_API, addToken(data), { withCredentials: ENV.SEND_COOKIES });
+        return $http.post(ENV.HIVE_API, addToken(data), { withCredentials: ENV.SEND_COOKIES });
       },
       get_role: function() {
-        return $http.post(ENV.STAR_BOOK_API, addToken({ action: 'get_role' }), { withCredentials: ENV.SEND_COOKIES });
+        return $http.post(ENV.HIVE_API, addToken({ action: 'get_role' }), { withCredentials: ENV.SEND_COOKIES });
       },
       remove_person: function(email) {
-        return $http.post(ENV.STAR_BOOK_API, addToken({
+        return $http.post(ENV.HIVE_API, addToken({
           action: 'remove_person',
           email: email
         }), { withCredentials: ENV.SEND_COOKIES });
       },
       add_person: function(fields) {
-        return $http.post(ENV.STAR_BOOK_API, addToken({
+        return $http.post(ENV.HIVE_API, addToken({
           action: 'add_person',
           email: fields.email.toLowerCase(),
           name: fields.name,
