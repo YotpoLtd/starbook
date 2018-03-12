@@ -9,4 +9,5 @@ flask_methods = FlaskMethods(api)
 
 
 if __name__ == "__main__":
+    utils.create_index()
     flask_methods.app.run(host=SOURCE_HOST)
