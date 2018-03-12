@@ -15,8 +15,9 @@ services:
     image: hive
     ports:
       - "5000:5000"
-    env_file:
-      - hive/hive-server-example.env
+    # If you would like to have a file with your environment variables
+    # env_file:
+    #  - hive/hive-server-example.env
     links:
       - elasticsearch
     networks:

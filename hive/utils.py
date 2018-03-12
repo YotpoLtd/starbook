@@ -6,7 +6,7 @@ from flask import jsonify
 
 class Utils:
     def __init__(self):
-        self.es = Elasticsearch([{"host": os.environ['ELASTIC_HOST'], "port": os.environ['ELASTIC_PORT']}])
+        self.es = Elasticsearch([{"host": ELASTIC_HOST, "port": ELASTIC_PORT}])
 
     def update_person_with_json(self, person):
         try:
