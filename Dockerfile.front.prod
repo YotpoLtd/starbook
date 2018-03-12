@@ -1,9 +1,0 @@
-FROM nginx:alpine
-
-MAINTAINER ops@yotpo.com
-
-# Nginx
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
-
-# Files
-COPY starbook-front/ /yotpo/starbook/
