@@ -1,4 +1,4 @@
-![HIVE Logo](https://user-images.githubusercontent.com/20245391/37286705-6247bbb6-260b-11e8-8c8f-d72212a9d081.png)
+<img src="https://user-images.githubusercontent.com/20245391/37286705-6247bbb6-260b-11e8-8c8f-d72212a9d081.png" width="120px"/>
 
 [![Build Status](https://travis-ci.org/YotpoLtd/starbook.svg?branch=master)](https://travis-ci.org/YotpoLtd/starbook)
 
