@@ -5,8 +5,8 @@ PERSONS_INDEX = os.getenv('PERSONS_INDEX', 'persons')
 PERSONS_TYPE = os.getenv('PERSONS_TYPE', 'person')
 PERSON_UNIQUE_KEY = os.getenv('PERSON_UNIQUE_KEY', 'email')
 SOURCE_HOST = os.getenv('SOURCE_HOST', '0.0.0.0')
-CLIENT_IDS = os.environ['CLIENT_IDS'].split(',')  # some-client-id.apps.googleusercontent.com,some-client-id2.apps.googleusercontent.com
 CLIENT_ID = os.environ['CLIENT_ID']  # some-client-id.apps.googleusercontent.com
+CLIENT_IDS = os.environ('CLIENT_IDS', os.environ['CLIENT_ID']).split(',')
 APPS_DOMAIN_NAME = os.environ['APPS_DOMAIN_NAME']  # my-domain.com
 DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
 ORIGIN = os.getenv('ORIGIN', 'http://localhost:8080')
