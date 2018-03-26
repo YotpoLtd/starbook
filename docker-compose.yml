@@ -1,7 +1,7 @@
 version: '2'
 
 networks:
-  starbook:
+  hive:
     ipam:
       driver: default
       config:
@@ -10,53 +10,25 @@ networks:
         gateway: 172.35.0.1
 
 services:
-  starbook-backend:
-    build: starbook-backend
-    image: starbook-backend
+  hive-server:
+    build: hive
+    image: hive
     ports:
       - "5000:5000"
-    env_file:
-      - starbook-backend/starbook-backend-example.env
+    # If you would like to have a file with your environment variables
+    # env_file:
+    #  - hive/hive-server-example.env
     links:
       - elasticsearch
-      - redis
     networks:
-      - starbook
-
-  redis:
-    image: redis
-    ports:
-      - "6379:6379"
-    networks:
-      - starbook
+      - hive
 
   elasticsearch:
     image: elasticsearch:2.3
     ports:
       - "9200:9200"
     networks:
-      - starbook
-
-  # slackbot:
-  #   build: slackbot
-  #   links:
-  #     - starbook-backend
-  #   env_file:
-  #     - slackbot/slackbot-example.env
-
-  starbook-front:
-    build:
-      context: starbook-front
-      dockerfile: Dockerfile.local
-    image: starbook-front
-    env_file:
-      - starbook-front/starbook-front-example.env
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./starbook-front/env:/var/www/env/
-    networks:
-      - starbook
+      - hive
 
   kibana:
     image: kibana:4.5.2
@@ -69,7 +41,7 @@ services:
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
     networks:
-      - starbook
+      - hive
 
   logstash:
     image: logstash
@@ -81,4 +53,4 @@ services:
     ports:
       - 5678:5678
     networks:
-      - starbook
+      - hive

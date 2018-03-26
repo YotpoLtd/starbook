@@ -4,7 +4,7 @@ angular.module('myApp')
     function($scope, $http, api, ENV, $timeout, $window, $cookies, $mdDialog, $mdToast, authService) {
       var auth2;
       var self = this;
-      var starbook_token = 'starbook-token';
+      var hive_token = 'hive-token';
 
       self.auth = true;
 
@@ -58,7 +58,8 @@ angular.module('myApp')
       self.signOut = function() {
         auth2.signOut().then(function() {
           $timeout(function() {
-            $cookies.remove(starbook_token);
+            console.log('User signed out.');
+            $cookies.remove(hive_token);
             $window.location.reload();
           });
         });
@@ -75,7 +76,7 @@ angular.module('myApp')
         $mdDialog.show({
           controller: 'UpdatePersonController',
           controllerAs: 'ctrl',
-          templateUrl: 'assets/update_person_template.html',
+          templateUrl: 'static/assets/update_person_template.html',
           parent: angular.element(document.body),
           targetEvent: ev,
           clickOutsideToClose: true
@@ -97,7 +98,7 @@ angular.module('myApp')
         $mdDialog.show({
           controller: 'AddPersonController',
           controllerAs: 'ctrl',
-          templateUrl: 'assets/add_person_template.html',
+          templateUrl: 'static/assets/add_person_template.html',
           parent: angular.element(document.body),
           targetEvent: ev,
           clickOutsideToClose: true
@@ -166,7 +167,7 @@ angular.module('myApp')
         $mdDialog.show({
           controller: 'ChoosePicController',
           controllerAs: 'ctrl',
-          templateUrl: 'assets/choose_pic_modal.html',
+          templateUrl: 'static/assets/choose_pic_modal.html',
           parent: angular.element(document.body),
           targetEvent: ev,
           clickOutsideToClose: true

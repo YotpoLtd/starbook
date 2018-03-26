@@ -1,12 +1,12 @@
 angular.module('myApp')
   .factory('authService', ['$timeout', '$cookies', '$q', 'ENV',
     function($timeout, $cookies, $q, ENV) {
-      var starbook_token = 'starbook-token';
+      var hive_token = 'hive-token';
 
       function saveToken(auth2) {
         var token = auth2.currentUser.get().getAuthResponse().id_token;
         console.log(token);
-        $cookies.put(starbook_token, token);
+        $cookies.put(hive_token, token);
       }
 
       return {

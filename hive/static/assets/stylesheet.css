@@ -100,7 +100,7 @@ body {
 #breadcrumbs {
     position: absolute;
     top: 15px;
-    left: 92px;
+    left: 55px;
 }
 
 #breadcrumbs a {
@@ -253,7 +253,7 @@ body {
 
 .yo-logo {
     width: 40px;
-    margin-top: 13px;
+    margin-top: 11px;
     margin-left: 10px;
 }
 

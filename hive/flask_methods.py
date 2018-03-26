@@ -2,14 +2,27 @@ import json
 from oauth2client import client, crypt
 from api import Api
 from env import *
-from flask import request, jsonify, Flask
+from flask import request, jsonify, Flask, send_from_directory, render_template
 from logger import log
 
 
 class FlaskMethods:
     def __init__(self, api):
         self.app = Flask(__name__)
+        static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
         app = self.app
+
+        @app.route("/")
+        def send_index():
+            return render_template('index.html',
+                                   client_id=CLIENT_ID,
+                                   hive_api=HIVE_API_ENDPOINT,
+                                   send_cookies=int(SEND_COOKIES),
+                                   facebook_app_id=FACEBOOK_APP_ID)
+
+        @app.route("/static/<path:path>")
+        def send_file(path):
+            return send_from_directory(static_file_dir, path)
 
         @app.route(APPLICATION_ROOT, methods=['GET', 'POST'])
         def all_routes():
@@ -59,7 +72,9 @@ class FlaskMethods:
         def verify_token():
             if DEBUG or request.method == 'OPTIONS':
                 return
-            token = request.cookies.get('starbook-token') or (request.json and request.json.get('starbook-token'))
+            if request.path.startswith(static_file_dir):
+                return
+            token = request.cookies.get('hive-token') or (request.json and request.json.get('hive-token'))
             if not token:
                 return jsonify({'error': 'no token'}), 401
             try:
